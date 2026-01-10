@@ -1,44 +1,23 @@
 import './App.css'
 import { useVehicleState } from './hooks/useVehicleState'
-import { CarPlayDisplay } from './components/CarPlayDisplay'
-import { VehicleControls } from './components/VehicleControls'
+import { VehicleContext } from './api/VehicleContext'
+import { Dashboard } from './dashboard/components/Dashboard'
+import { VehicleControls } from './controls/components/VehicleControls'
 
 function App() {
-  const {
-    state,
-    startEngine,
-    stopEngine,
-    accelerate,
-    brake,
-    changeGear,
-    toggleLights,
-    toggleWipers,
-    toggleDoorLock,
-    toggleWindows,
-    reset,
-  } = useVehicleState()
+  const vehicleAPI = useVehicleState()
 
   return (
-    <div className="app-container">
-      <div className="carplay-section">
-        <CarPlayDisplay state={state} />
+    <VehicleContext.Provider value={vehicleAPI}>
+      <div className="app-container">
+        <div className="carplay-section">
+          <Dashboard />
+        </div>
+        <div className="controls-section">
+          <VehicleControls />
+        </div>
       </div>
-      <div className="controls-section">
-        <VehicleControls
-          state={state}
-          onStartEngine={startEngine}
-          onStopEngine={stopEngine}
-          onAccelerate={accelerate}
-          onBrake={brake}
-          onChangeGear={changeGear}
-          onToggleLights={toggleLights}
-          onToggleWipers={toggleWipers}
-          onToggleDoorLock={toggleDoorLock}
-          onToggleWindows={toggleWindows}
-          onReset={reset}
-        />
-      </div>
-    </div>
+    </VehicleContext.Provider>
   )
 }
 

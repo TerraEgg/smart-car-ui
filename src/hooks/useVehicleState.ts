@@ -1,5 +1,5 @@
 import { useReducer, useCallback, useEffect, useState } from 'react';
-import { VehicleState, VehicleAction } from '../types/vehicle';
+import type { VehicleState, VehicleAction } from '../types/vehicle';
 
 const initialState: VehicleState = {
   speed: 0,
@@ -11,8 +11,18 @@ const initialState: VehicleState = {
   lights: 'off',
   wipers: 'off',
   doorLocked: true,
-  windowsOpen: false,
-  seatHeat: 0,
+  windows: {
+    frontLeft: false,
+    frontRight: false,
+    rearLeft: false,
+    rearRight: false,
+  },
+  seatHeat: {
+    driver: 0,
+    passenger: 0,
+    rearLeft: 0,
+    rearRight: 0,
+  },
   volume: 50,
   musicPlaying: false,
   currentTrack: 'No track',
@@ -30,7 +40,6 @@ function vehicleReducer(state: VehicleState, action: VehicleAction): VehicleStat
       return { 
         ...state, 
         isEngineRunning: true, 
-        insideTemp: Math.min(state.insideTemp + 5, 25),
         rpm: 800,
       };
     
@@ -40,30 +49,21 @@ function vehicleReducer(state: VehicleState, action: VehicleAction): VehicleStat
         isEngineRunning: false, 
         speed: 0, 
         gear: 'P', 
-        insideTemp: Math.max(state.insideTemp - 2, state.outsideTemp),
         rpm: 0,
       };
     
-    case 'ACCELERATE':
-      if (!state.isEngineRunning || state.speed >= 200) return state;
-      const newSpeed = Math.min(state.speed + 10, 200);
+    case 'SET_SPEED':
+      if (!state.isEngineRunning) return state;
+      const newSpeed = Math.max(0, Math.min(200, action.speed));
+      const newRpm = state.isEngineRunning ? 800 + (newSpeed * 30) : 0;
       return { 
         ...state, 
-        speed: newSpeed, 
-        insideTemp: Math.min(state.insideTemp + 1, 30),
-        rpm: Math.min(state.rpm + 1000, 7000),
-      };
-    
-    case 'BRAKE':
-      return { 
-        ...state, 
-        speed: Math.max(state.speed - 15, 0),
-        rpm: Math.max(state.rpm - 500, 800),
+        speed: newSpeed,
+        rpm: Math.min(newRpm, 7000),
       };
     
     case 'CHANGE_GEAR':
-      if (!state.isEngineRunning) return state;
-      return { ...state, gear: action.gear, speed: action.gear === 'P' ? 0 : state.speed };
+      return { ...state, gear: action.gear };
     
     case 'TOGGLE_LIGHTS':
       return { ...state, lights: action.lights };
@@ -74,17 +74,26 @@ function vehicleReducer(state: VehicleState, action: VehicleAction): VehicleStat
     case 'TOGGLE_DOOR_LOCK':
       return { ...state, doorLocked: !state.doorLocked };
     
-    case 'TOGGLE_WINDOWS':
+    case 'TOGGLE_WINDOW':
       return { 
         ...state, 
-        windowsOpen: !state.windowsOpen,
-        insideTemp: state.windowsOpen 
-          ? Math.min(state.insideTemp + 3, 35)
-          : Math.max(state.insideTemp - 2, state.outsideTemp),
+        windows: {
+          ...state.windows,
+          [action.window]: !state.windows[action.window],
+        },
       };
     
     case 'SET_SEAT_HEAT':
-      return { ...state, seatHeat: action.level };
+      return { 
+        ...state,
+        seatHeat: {
+          ...state.seatHeat,
+          [action.seat]: action.level,
+        },
+      };
+    
+    case 'SET_INSIDE_TEMP':
+      return { ...state, insideTemp: Math.max(15, Math.min(30, action.temp)) };
     
     case 'SET_VOLUME':
       return { ...state, volume: Math.max(0, Math.min(100, action.volume)) };
@@ -128,7 +137,6 @@ export function useVehicleState() {
   useEffect(() => {
     const interval = setInterval(() => {
       // Slightly vary outside temp (between 5-25°C)
-      const newOutsideTemp = 15 + Math.sin(Date.now() / 10000) * 10;
       setUpdateTrigger(prev => prev + 1);
     }, 5000);
     return () => clearInterval(interval);
@@ -136,8 +144,8 @@ export function useVehicleState() {
 
   const startEngine = useCallback(() => dispatch({ type: 'START_ENGINE' }), []);
   const stopEngine = useCallback(() => dispatch({ type: 'STOP_ENGINE' }), []);
-  const accelerate = useCallback(() => dispatch({ type: 'ACCELERATE' }), []);
-  const brake = useCallback(() => dispatch({ type: 'BRAKE' }), []);
+  const setSpeed = useCallback((speed: number) => 
+    dispatch({ type: 'SET_SPEED', speed }), []);
   const changeGear = useCallback((gear: 'P' | 'R' | 'N' | 'D') => 
     dispatch({ type: 'CHANGE_GEAR', gear }), []);
   const toggleLights = useCallback((lights: 'off' | 'parking' | 'dipped' | 'high') => 
@@ -145,9 +153,12 @@ export function useVehicleState() {
   const toggleWipers = useCallback((wipers: 'off' | 'slow' | 'medium' | 'fast') => 
     dispatch({ type: 'TOGGLE_WIPERS', wipers }), []);
   const toggleDoorLock = useCallback(() => dispatch({ type: 'TOGGLE_DOOR_LOCK' }), []);
-  const toggleWindows = useCallback(() => dispatch({ type: 'TOGGLE_WINDOWS' }), []);
-  const setSeatHeat = useCallback((level: 0 | 1 | 2 | 3) => 
-    dispatch({ type: 'SET_SEAT_HEAT', level }), []);
+  const toggleWindow = useCallback((window: 'frontLeft' | 'frontRight' | 'rearLeft' | 'rearRight') => 
+    dispatch({ type: 'TOGGLE_WINDOW', window }), []);
+  const setSeatHeat = useCallback((seat: 'driver' | 'passenger' | 'rearLeft' | 'rearRight', level: 0 | 1 | 2 | 3) => 
+    dispatch({ type: 'SET_SEAT_HEAT', seat, level }), []);
+  const setInsideTemp = useCallback((temp: number) => 
+    dispatch({ type: 'SET_INSIDE_TEMP', temp }), []);
   const setVolume = useCallback((volume: number) => 
     dispatch({ type: 'SET_VOLUME', volume }), []);
   const toggleMusic = useCallback(() => dispatch({ type: 'TOGGLE_MUSIC' }), []);
@@ -159,14 +170,14 @@ export function useVehicleState() {
     state,
     startEngine,
     stopEngine,
-    accelerate,
-    brake,
+    setSpeed,
     changeGear,
     toggleLights,
     toggleWipers,
     toggleDoorLock,
-    toggleWindows,
+    toggleWindow,
     setSeatHeat,
+    setInsideTemp,
     setVolume,
     toggleMusic,
     setWeather,

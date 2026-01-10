@@ -8,8 +8,18 @@ export interface VehicleState {
   lights: 'off' | 'parking' | 'dipped' | 'high';
   wipers: 'off' | 'slow' | 'medium' | 'fast';
   doorLocked: boolean;
-  windowsOpen: boolean;
-  seatHeat: 0 | 1 | 2 | 3; // 0 = off, 1 = low, 2 = medium, 3 = high
+  windows: {
+    frontLeft: boolean;
+    frontRight: boolean;
+    rearLeft: boolean;
+    rearRight: boolean;
+  };
+  seatHeat: {
+    driver: 0 | 1 | 2 | 3;
+    passenger: 0 | 1 | 2 | 3;
+    rearLeft: 0 | 1 | 2 | 3;
+    rearRight: 0 | 1 | 2 | 3;
+  };
   volume: number; // 0-100
   musicPlaying: boolean;
   currentTrack: string;
@@ -24,14 +34,14 @@ export interface VehicleState {
 export type VehicleAction = 
   | { type: 'START_ENGINE' }
   | { type: 'STOP_ENGINE' }
-  | { type: 'ACCELERATE' }
-  | { type: 'BRAKE' }
+  | { type: 'SET_SPEED'; speed: number }
   | { type: 'CHANGE_GEAR'; gear: 'P' | 'R' | 'N' | 'D' }
   | { type: 'TOGGLE_LIGHTS'; lights: 'off' | 'parking' | 'dipped' | 'high' }
   | { type: 'TOGGLE_WIPERS'; wipers: 'off' | 'slow' | 'medium' | 'fast' }
   | { type: 'TOGGLE_DOOR_LOCK' }
-  | { type: 'TOGGLE_WINDOWS' }
-  | { type: 'SET_SEAT_HEAT'; level: 0 | 1 | 2 | 3 }
+  | { type: 'TOGGLE_WINDOW'; window: 'frontLeft' | 'frontRight' | 'rearLeft' | 'rearRight' }
+  | { type: 'SET_SEAT_HEAT'; seat: 'driver' | 'passenger' | 'rearLeft' | 'rearRight'; level: 0 | 1 | 2 | 3 }
+  | { type: 'SET_INSIDE_TEMP'; temp: number }
   | { type: 'SET_VOLUME'; volume: number }
   | { type: 'TOGGLE_MUSIC' }
   | { type: 'SET_WEATHER'; weather: 'clear' | 'cloudy' | 'rainy' | 'snowy' | 'foggy' }
