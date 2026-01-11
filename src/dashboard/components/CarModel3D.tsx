@@ -1,27 +1,22 @@
 import React, { Suspense, useEffect, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, useGLTF } from '@react-three/drei';
+import { OrbitControls, useGLTF, Preload } from '@react-three/drei';
 import './CarModel3D.css';
 
 interface CarModel3DProps {
   isEngineRunning: boolean;
 }
 
-let setIsLoadingRef: ((value: boolean) => void) | null = null;
-
-function CarModel() {
-  const { scene } = useGLTF('/2025_bmw_m4_competition.glb');
+function CarModel({ onLoaded }: { onLoaded: () => void }) {
+  const gltf = useGLTF('/2025_bmw_m4_competition.glb');
   
   useEffect(() => {
-    // Model is ready as soon as this component mounts
-    if (setIsLoadingRef) {
-      setIsLoadingRef(false);
-    }
-  }, []);
+    onLoaded();
+  }, [gltf, onLoaded]);
   
   return (
     <primitive 
-      object={scene} 
+      object={gltf.scene} 
       scale={40} 
       position={[0.5, 0, 0]} 
       rotation={[0, Math.PI / 4, 0]}
@@ -29,20 +24,36 @@ function CarModel() {
   );
 }
 
-export const CarModel3D: React.FC<CarModel3DProps> = ({ isEngineRunning }) => {
-  const [isLoading, setIsLoading] = useState(false);
+function SceneContent({ onLoaded }: { onLoaded: () => void }) {
+  return (
+    <>
+      <ambientLight intensity={0.8} />
+      <directionalLight position={[10, 15, 8]} intensity={1.2} />
+      <directionalLight position={[-10, -8, -5]} intensity={0.5} />
+      <Suspense fallback={null}>
+        <CarModel onLoaded={onLoaded} />
+      </Suspense>
+      <Preload all />
+      <OrbitControls
+        enableZoom={true}
+        enablePan={false}
+        enableRotate={true}
+        autoRotate={false}
+        makeDefault
+        minDistance={1.0}
+        maxDistance={3.5}
+      />
+    </>
+  );
+}
 
-  useEffect(() => {
-    setIsLoadingRef = setIsLoading;
-    
-    if (isEngineRunning) {
-      setIsLoading(true);
-    }
-    
-    return () => {
-      setIsLoadingRef = null;
-    };
-  }, [isEngineRunning]);
+export const CarModel3D: React.FC<CarModel3DProps> = ({ isEngineRunning }) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [canvasReady, setCanvasReady] = useState(false);
+
+  const handleModelLoaded = React.useCallback(() => {
+    setIsLoading(false);
+  }, []);
 
   if (!isEngineRunning) {
     return null;
@@ -104,31 +115,36 @@ export const CarModel3D: React.FC<CarModel3DProps> = ({ isEngineRunning }) => {
           </div>
         </div>
       )}
-      <Canvas
-        gl={{
-          antialias: true,
-          alpha: true,
-          powerPreference: 'high-performance',
-        }}
-        camera={{ position: [1.99, 1, 1.51], fov: 45 }}
-        style={{ width: '100%', height: '100%' }}
-      >
-        <ambientLight intensity={0.8} />
-        <directionalLight position={[10, 15, 8]} intensity={1.2} />
-        <directionalLight position={[-10, -8, -5]} intensity={0.5} />
-        <Suspense fallback={null}>
-          <CarModel />
-        </Suspense>
-        <OrbitControls
-          enableZoom={true}
-          enablePan={false}
-          enableRotate={true}
-          autoRotate={false}
-          makeDefault
-          minDistance={1.0}
-          maxDistance={3.5}
-        />
-      </Canvas>
+      <Suspense fallback={<div />}>
+        {canvasReady && (
+          <Canvas
+            gl={{
+              antialias: true,
+              alpha: true,
+              powerPreference: 'high-performance',
+              failIfMajorPerformanceCaveat: false,
+              preserveDrawingBuffer: true,
+            }}
+            camera={{ position: [1.99, 1, 1.51], fov: 45 }}
+            style={{ width: '100%', height: '100%' }}
+            onCreated={() => {
+              setTimeout(() => {
+                setIsLoading(false);
+              }, 100);
+            }}
+          >
+            <SceneContent onLoaded={handleModelLoaded} />
+          </Canvas>
+        )}
+        {!canvasReady && (
+          <div style={{ width: '100%', height: '100%' }} ref={(el) => {
+            if (el) {
+              // Delay canvas mounting to avoid context issues
+              setTimeout(() => setCanvasReady(true), 50);
+            }
+          }} />
+        )}
+      </Suspense>
       <style>{`
         @keyframes spin {
           to { transform: rotate(360deg); }
