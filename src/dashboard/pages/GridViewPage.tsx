@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
-import { Radio, ArrowLeft } from 'lucide-react';
+import { Radio, ArrowLeft, Settings } from 'lucide-react';
 import { useVehicleAPI } from '../../api/VehicleContext';
 
 interface GridViewPageProps {
   onNavigateToMyBMW: () => void;
   onNavigateToPlayer: () => void;
+  onNavigateToSettings: () => void;
   onMergeStepChange?: (step: number, color: string | null) => void;
   onBack?: () => void;
 }
 
-export const GridViewPage: React.FC<GridViewPageProps> = ({ onNavigateToMyBMW, onNavigateToPlayer, onMergeStepChange, onBack }) => {
+export const GridViewPage: React.FC<GridViewPageProps> = ({ onNavigateToMyBMW, onNavigateToPlayer, onNavigateToSettings, onMergeStepChange, onBack }) => {
   const { state } = useVehicleAPI();
   const [mergeStep, setMergeStep] = useState(0);
   const [clickedTileColor, setClickedTileColor] = useState<string | null>(null);
@@ -53,6 +54,10 @@ export const GridViewPage: React.FC<GridViewPageProps> = ({ onNavigateToMyBMW, o
 
   const handlePlayerTileClick = () => {
     handleTileClick('#ffdfbb', onNavigateToPlayer);
+  };
+
+  const handleSettingsTileClick = () => {
+    handleTileClick('#bae1ff', onNavigateToSettings);
   };
 
   // Format time to 12-hour format
@@ -277,13 +282,37 @@ export const GridViewPage: React.FC<GridViewPageProps> = ({ onNavigateToMyBMW, o
         
         <div 
           className="tile tile-medium" 
+          onClick={handleSettingsTileClick}
           style={{ 
             backgroundColor: mergeStep >= 2 && clickedTileColor ? clickedTileColor : '#bae1ff',
             transition: `background-color 0.5s ease`,
             boxShadow: isAnimating && mergeStep >= 3 ? 'none' : '0 4px 12px rgba(0, 0, 0, 0.15)',
+            cursor: isAnimating ? 'default' : 'pointer',
             pointerEvents: isAnimating && mergeStep >= 3 ? 'none' : 'auto'
           }}
-        ></div>
+        >
+          <div style={{
+            opacity: isAnimating ? 0 : 1,
+            transition: 'opacity 0.5s ease',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            width: '100%',
+            height: '100%'
+          }}>
+            <Settings size={64} color="#6b4a5a" strokeWidth={1.5} />
+            <div style={{ 
+              fontSize: '28px', 
+              fontWeight: '500',
+              color: '#6b4a5a',
+              fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "SF Pro Display", sans-serif'
+            }}>
+              Settings
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Three dots menu at bottom */}

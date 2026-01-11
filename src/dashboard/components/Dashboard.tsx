@@ -6,6 +6,7 @@ import { MyBMWPage } from '../pages/MyBMWPage';
 import { PlayerPage } from '../pages/PlayerPage';
 import { RadioPage } from '../pages/RadioPage';
 import { OnlinePage } from '../pages/OnlinePage';
+import { SettingsPage } from '../pages/SettingsPage';
 import './Dashboard.css';
 
 interface RadioStation {
@@ -28,7 +29,7 @@ interface OnlineTrack {
   isLocal?: boolean;
 }
 
-type PageType = 'grid' | 'mybmw' | 'player' | 'radio' | 'online';
+type PageType = 'grid' | 'mybmw' | 'player' | 'radio' | 'online' | 'settings';
 type PlaybackSource = 'radio' | 'online' | null;
 
 export const Dashboard: React.FC = () => {
@@ -216,6 +217,7 @@ export const Dashboard: React.FC = () => {
           <GridViewPage 
             onNavigateToMyBMW={() => setCurrentPage('mybmw')}
             onNavigateToPlayer={() => setCurrentPage('player')}
+            onNavigateToSettings={() => setCurrentPage('settings')}
             onMergeStepChange={(step, color) => {
               setMergeStepBackground(step);
               setMergeColor(color);
@@ -263,6 +265,10 @@ export const Dashboard: React.FC = () => {
           volume={volume}
           setVolume={setVolume}
         />
+      )}
+
+      {currentPage === 'settings' && (
+        <SettingsPage onBack={() => setCurrentPage('grid')} />
       )}
     </div>
   );
