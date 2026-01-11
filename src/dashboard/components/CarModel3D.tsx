@@ -110,7 +110,7 @@ export const CarModel3D: React.FC<CarModel3DProps> = ({ isEngineRunning }) => {
                 fontWeight: '500',
               }}
             >
-              Loading 3D Model...
+              Loading vehicle model...
             </div>
           </div>
         </div>
