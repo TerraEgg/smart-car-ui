@@ -15,8 +15,6 @@ export const VehicleControls: React.FC = () => {
     toggleWindow,
     setSeatHeat,
     setInsideTemp,
-    setVolume,
-    toggleMusic,
     setWeather,
     reset,
   } = useVehicleAPI();
