@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { ArrowLeft } from 'lucide-react';
 import { useVehicleAPI } from '../../api/VehicleContext';
 import { CarModel3D } from '../components/CarModel3D';
 
@@ -179,18 +180,19 @@ export const MyBMWPage: React.FC<MyBMWPageProps> = ({ onBack }) => {
               style={{
                 background: 'transparent',
                 border: 'none',
-                fontSize: '20px',
+                fontSize: '14px',
                 color: '#6b4a5a',
                 cursor: 'pointer',
-                padding: '4px 8px',
+                padding: '8px 12px',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
+                gap: '6px',
                 transition: 'all 0.2s ease',
               }}
               title="Go back"
             >
-              ←
+              <ArrowLeft size={16} />
+              Back
             </button>
           </div>
 

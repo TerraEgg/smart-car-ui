@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Radio, Wifi } from 'lucide-react';
+import { Radio, Wifi, ArrowLeft } from 'lucide-react';
 
 interface PlayerPageProps {
   onBack: () => void;
@@ -47,6 +47,9 @@ export const PlayerPage: React.FC<PlayerPageProps> = ({ onBack }) => {
           color: '#6b4a5a',
           boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
           transition: 'all 0.2s ease',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '6px',
         }}
         onMouseEnter={(e) => {
           e.currentTarget.style.boxShadow = '0 6px 16px rgba(0, 0, 0, 0.15)';
@@ -57,7 +60,8 @@ export const PlayerPage: React.FC<PlayerPageProps> = ({ onBack }) => {
           e.currentTarget.style.transform = 'translateY(0)';
         }}
       >
-        ← Back
+        <ArrowLeft size={18} />
+        Back
       </button>
 
       {/* Media Selection Buttons */}
