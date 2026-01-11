@@ -3,6 +3,7 @@ import { useVehicleAPI } from '../../api/VehicleContext';
 import { StartScreen } from './StartScreen';
 import { GridViewPage } from '../pages/GridViewPage';
 import { MyBMWPage } from '../pages/MyBMWPage';
+import { PlayerPage } from '../pages/PlayerPage';
 import './Dashboard.css';
 
 type PageType = 'grid' | 'mybmw' | 'player';
@@ -93,9 +94,7 @@ export const Dashboard: React.FC = () => {
       )}
 
       {currentPage === 'player' && (
-        <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f2d2dc' }}>
-          <div>Player Page (Coming Soon)</div>
-        </div>
+        <PlayerPage onBack={() => setCurrentPage('grid')} />
       )}
     </div>
   );
