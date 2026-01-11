@@ -183,25 +183,6 @@ export const VehicleControls: React.FC = () => {
       </div>
 
       <div className="control-section">
-        <h3>Music</h3>
-        <button
-          onClick={toggleMusic}
-          className={`control-btn music ${state.musicPlaying ? 'playing' : ''}`}
-        >
-          {state.musicPlaying ? 'Stop' : 'Play'}
-        </button>
-        <input
-          type="range"
-          min="0"
-          max="100"
-          value={state.volume}
-          onChange={(e) => setVolume(Number(e.target.value))}
-          className="volume-slider"
-        />
-        <div className="volume-label">Vol: {state.volume}</div>
-      </div>
-
-      <div className="control-section">
         <h3>Security</h3>
         <button
           onClick={toggleDoorLock}
