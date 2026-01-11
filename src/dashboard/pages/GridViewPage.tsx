@@ -55,6 +55,18 @@ export const GridViewPage: React.FC<GridViewPageProps> = ({ onNavigateToMyBMW, o
     handleTileClick('#ffdfbb', onNavigateToPlayer);
   };
 
+  // Format time to 12-hour format
+  const formatTime = (timeStr: string) => {
+    try {
+      const [hours, minutes] = timeStr.split(':').map(Number);
+      const period = hours >= 12 ? 'PM' : 'AM';
+      const displayHours = hours % 12 || 12;
+      return `${displayHours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${period}`;
+    } catch {
+      return timeStr;
+    }
+  };
+
   return (
     <div className="dashboard-grid-view" style={{
       width: '100%',
@@ -88,6 +100,66 @@ export const GridViewPage: React.FC<GridViewPageProps> = ({ onNavigateToMyBMW, o
           <ArrowLeft size={24} />
         </button>
       )}
+
+      {/* Weather/Time/Temp Display - Simple Top Bar */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '-30px',
+          left: '0',
+          right: '0',
+          backgroundColor: 'transparent',
+          padding: '4px 20px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          zIndex: 50,
+          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "SF Pro Display", sans-serif',
+          height: '30px',
+          opacity: isAnimating ? 0 : 1,
+          transition: 'opacity 0.5s ease',
+        }}
+      >
+        {/* Time on left */}
+        <div
+          style={{
+            fontSize: '11px',
+            fontWeight: '400',
+            color: '#FFFFFF',
+            flex: 1,
+          }}
+        >
+          {formatTime(state.time)}
+        </div>
+
+        {/* Temp in middle */}
+        <div
+          style={{
+            fontSize: '11px',
+            fontWeight: '400',
+            color: '#FFFFFF',
+            flex: 1,
+            textAlign: 'center',
+          }}
+        >
+          {Math.round(state.outsideTemp)}°C
+        </div>
+
+        {/* Weather on right */}
+        <div
+          style={{
+            fontSize: '11px',
+            fontWeight: '400',
+            color: '#FFFFFF',
+            flex: 1,
+            textAlign: 'right',
+            textTransform: 'capitalize',
+          }}
+        >
+          {state.weather}
+        </div>
+      </div>
+
       <div className="dashboard-grid" style={{
         backgroundColor: 'transparent',
         transition: 'none',

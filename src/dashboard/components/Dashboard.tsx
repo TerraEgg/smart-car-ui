@@ -196,7 +196,9 @@ export const Dashboard: React.FC = () => {
       width: '100%',
       height: '100%',
       backgroundColor: mergeStepBackground >= 3 && mergeColor ? mergeColor : 'transparent',
-      transition: mergeStepBackground >= 3 ? 'background-color 2s ease' : 'none'
+      transition: mergeStepBackground >= 3 ? 'background-color 2s ease' : 'none',
+      position: 'relative',
+      overflow: 'hidden'
     }}>
       <audio ref={audioRef} crossOrigin="anonymous" />
 
@@ -207,7 +209,9 @@ export const Dashboard: React.FC = () => {
           alignItems: 'center',
           justifyContent: 'center',
           width: '100%',
-          height: '100%'
+          height: '100%',
+          position: 'relative',
+          zIndex: 10
         }}>
           <GridViewPage 
             onNavigateToMyBMW={() => setCurrentPage('mybmw')}
