@@ -37,12 +37,12 @@ export const GridViewPage: React.FC<GridViewPageProps> = ({ onNavigateToMyBMW, o
         onMergeStepChange?.(3, tileColor);
       }, 1500);
       
-      // Step 3->4: Elements disappear and navigate (1s later, 2.5s total)
+      // Step 3->4: Elements disappear and navigate (2s later, 3.5s total - after background fade completes)
       setTimeout(() => {
         setMergeStep(4);
         onMergeStepChange?.(4, null);
         onNavigate();
-      }, 2500);
+      }, 3500);
     }
   };
 
