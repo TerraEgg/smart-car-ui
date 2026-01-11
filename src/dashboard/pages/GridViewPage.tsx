@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { Radio } from 'lucide-react';
+import { Radio, ArrowLeft } from 'lucide-react';
 import { useVehicleAPI } from '../../api/VehicleContext';
 
 interface GridViewPageProps {
   onNavigateToMyBMW: () => void;
   onNavigateToPlayer: () => void;
   onMergeStepChange?: (step: number, color: string | null) => void;
+  onBack?: () => void;
 }
 
-export const GridViewPage: React.FC<GridViewPageProps> = ({ onNavigateToMyBMW, onNavigateToPlayer, onMergeStepChange }) => {
+export const GridViewPage: React.FC<GridViewPageProps> = ({ onNavigateToMyBMW, onNavigateToPlayer, onMergeStepChange, onBack }) => {
   const { state } = useVehicleAPI();
   const [mergeStep, setMergeStep] = useState(0);
   const [clickedTileColor, setClickedTileColor] = useState<string | null>(null);
@@ -57,8 +58,36 @@ export const GridViewPage: React.FC<GridViewPageProps> = ({ onNavigateToMyBMW, o
   return (
     <div className="dashboard-grid-view" style={{
       width: '100%',
-      height: '100%'
+      height: '100%',
+      position: 'relative'
     }}>
+      {onBack && (
+        <button
+          onClick={onBack}
+          style={{
+            position: 'absolute',
+            top: '20px',
+            left: '20px',
+            background: 'rgba(0, 0, 0, 0.3)',
+            border: 'none',
+            borderRadius: '50%',
+            width: '44px',
+            height: '44px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            color: '#fff',
+            zIndex: 100,
+            transition: 'background 0.3s ease'
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.5)')}
+          onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(0, 0, 0, 0.3)')}
+          title="Back"
+        >
+          <ArrowLeft size={24} />
+        </button>
+      )}
       <div className="dashboard-grid" style={{
         backgroundColor: 'transparent',
         transition: 'none',

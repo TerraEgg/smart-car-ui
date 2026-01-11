@@ -1,11 +1,51 @@
 import React, { useState } from 'react';
-import { Radio, Wifi, ArrowLeft } from 'lucide-react';
+import { Radio, Wifi, ArrowLeft, Play, Pause, Volume2, VolumeX, Music } from 'lucide-react';
+
+interface RadioStation {
+  stationuuid: string;
+  name: string;
+  country: string;
+  language: string;
+  votes: number;
+  url: string;
+  favicon?: string;
+}
+
+interface OnlineTrack {
+  id: string;
+  title: string;
+  artist: string;
+  duration: number;
+  url: string;
+  image: string;
+  isLocal?: boolean;
+}
 
 interface PlayerPageProps {
   onBack: () => void;
+  onNavigateToRadio?: () => void;
+  onNavigateToOnline?: () => void;
+  currentStation?: RadioStation | null;
+  currentOnlineTrack?: OnlineTrack | null;
+  playbackSource?: 'radio' | 'online' | null;
+  isPlaying?: boolean;
+  volume?: number;
+  onTogglePlayPause?: () => void;
+  onVolumeChange?: (volume: number) => void;
 }
 
-export const PlayerPage: React.FC<PlayerPageProps> = ({ onBack }) => {
+export const PlayerPage: React.FC<PlayerPageProps> = ({
+  onBack,
+  onNavigateToRadio,
+  onNavigateToOnline,
+  currentStation,
+  currentOnlineTrack,
+  playbackSource,
+  isPlaying = false,
+  volume = 70,
+  onTogglePlayPause,
+  onVolumeChange,
+}) => {
   const [isFadingOut, setIsFadingOut] = useState(false);
 
   const handleBack = () => {
@@ -23,8 +63,7 @@ export const PlayerPage: React.FC<PlayerPageProps> = ({ onBack }) => {
         height: '100%',
         backgroundColor: '#ffdfbb',
         display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
+        flexDirection: 'column',
         opacity: isFadingOut ? 0 : 1,
         transition: 'opacity 0.3s ease-out',
         position: 'relative',
@@ -45,24 +84,140 @@ export const PlayerPage: React.FC<PlayerPageProps> = ({ onBack }) => {
           fontSize: '14px',
           fontWeight: '500',
           color: '#6b4a5a',
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-          transition: 'all 0.2s ease',
           display: 'flex',
           alignItems: 'center',
           gap: '6px',
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.boxShadow = '0 6px 16px rgba(0, 0, 0, 0.15)';
-          e.currentTarget.style.transform = 'translateY(-2px)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
-          e.currentTarget.style.transform = 'translateY(0)';
         }}
       >
         <ArrowLeft size={18} />
         Back
       </button>
+
+      {/* Now Playing Section */}
+      {(currentStation || currentOnlineTrack) && (
+        <div
+          style={{
+            padding: '20px',
+            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+            margin: '80px 20px 0',
+            borderRadius: '12px',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              marginBottom: '12px',
+            }}
+          >
+            {playbackSource === 'radio' ? <Radio size={20} color="#6b4a5a" /> : <Music size={20} color="#6b4a5a" />}
+            <div>
+              <div style={{ fontSize: '12px', color: '#999' }}>Now Playing</div>
+              <div
+                style={{
+                  fontSize: '16px',
+                  fontWeight: '600',
+                  color: '#6b4a5a',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                  maxWidth: '300px',
+                }}
+              >
+                {playbackSource === 'radio' ? currentStation?.name : currentOnlineTrack?.title}
+              </div>
+              {playbackSource === 'online' && currentOnlineTrack?.artist && (
+                <div
+                  style={{
+                    fontSize: '12px',
+                    color: '#999',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                    maxWidth: '300px',
+                  }}
+                >
+                  {currentOnlineTrack.artist}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Playback Controls */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              marginBottom: '12px',
+            }}
+          >
+            <button
+              onClick={onTogglePlayPause}
+              style={{
+                padding: '8px 16px',
+                backgroundColor: '#6b4a5a',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                fontWeight: '500',
+              }}
+            >
+              {isPlaying ? (
+                <>
+                  <Pause size={16} />
+                  Pause
+                </>
+              ) : (
+                <>
+                  <Play size={16} />
+                  Play
+                </>
+              )}
+            </button>
+          </div>
+
+          {/* Volume Control */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+            }}
+          >
+            {volume === 0 ? (
+              <VolumeX size={18} color="#6b4a5a" />
+            ) : (
+              <Volume2 size={18} color="#6b4a5a" />
+            )}
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={volume}
+              onChange={(e) => onVolumeChange?.(Number(e.target.value))}
+              style={{
+                flex: 1,
+                height: '4px',
+                borderRadius: '2px',
+                backgroundColor: '#ddd',
+                outline: 'none',
+                cursor: 'pointer',
+                accentColor: '#6b4a5a',
+              }}
+            />
+            <span style={{ fontSize: '12px', color: '#999', minWidth: '30px' }}>
+              {volume}%
+            </span>
+          </div>
+        </div>
+      )}
 
       {/* Media Selection Buttons */}
       <div
@@ -71,10 +226,12 @@ export const PlayerPage: React.FC<PlayerPageProps> = ({ onBack }) => {
           gap: '40px',
           alignItems: 'center',
           justifyContent: 'center',
+          flex: 1,
         }}
       >
         {/* Radio Button */}
         <button
+          onClick={onNavigateToRadio}
           style={{
             width: '200px',
             height: '200px',
@@ -87,17 +244,7 @@ export const PlayerPage: React.FC<PlayerPageProps> = ({ onBack }) => {
             alignItems: 'center',
             justifyContent: 'center',
             gap: '16px',
-            boxShadow: '0 12px 40px rgba(0, 0, 0, 0.15)',
-            transition: 'all 0.3s ease',
             backdropFilter: 'blur(10px)',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'scale(1.05)';
-            e.currentTarget.style.boxShadow = '0 16px 48px rgba(0, 0, 0, 0.2)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'scale(1)';
-            e.currentTarget.style.boxShadow = '0 12px 40px rgba(0, 0, 0, 0.15)';
           }}
         >
           <Radio size={64} color="#6b4a5a" strokeWidth={1.5} />
@@ -115,6 +262,7 @@ export const PlayerPage: React.FC<PlayerPageProps> = ({ onBack }) => {
 
         {/* Online Button */}
         <button
+          onClick={onNavigateToOnline}
           style={{
             width: '200px',
             height: '200px',
@@ -127,17 +275,7 @@ export const PlayerPage: React.FC<PlayerPageProps> = ({ onBack }) => {
             alignItems: 'center',
             justifyContent: 'center',
             gap: '16px',
-            boxShadow: '0 12px 40px rgba(0, 0, 0, 0.15)',
-            transition: 'all 0.3s ease',
             backdropFilter: 'blur(10px)',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'scale(1.05)';
-            e.currentTarget.style.boxShadow = '0 16px 48px rgba(0, 0, 0, 0.2)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'scale(1)';
-            e.currentTarget.style.boxShadow = '0 12px 40px rgba(0, 0, 0, 0.15)';
           }}
         >
           <Wifi size={64} color="#6b4a5a" strokeWidth={1.5} />

@@ -1,12 +1,35 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useVehicleAPI } from '../../api/VehicleContext';
 import { StartScreen } from './StartScreen';
 import { GridViewPage } from '../pages/GridViewPage';
 import { MyBMWPage } from '../pages/MyBMWPage';
 import { PlayerPage } from '../pages/PlayerPage';
+import { RadioPage } from '../pages/RadioPage';
+import { OnlinePage } from '../pages/OnlinePage';
 import './Dashboard.css';
 
-type PageType = 'grid' | 'mybmw' | 'player';
+interface RadioStation {
+  stationuuid: string;
+  name: string;
+  country: string;
+  language: string;
+  votes: number;
+  url: string;
+  favicon?: string;
+}
+
+interface OnlineTrack {
+  id: string;
+  title: string;
+  artist: string;
+  duration: number;
+  url: string;
+  image: string;
+  isLocal?: boolean;
+}
+
+type PageType = 'grid' | 'mybmw' | 'player' | 'radio' | 'online';
+type PlaybackSource = 'radio' | 'online' | null;
 
 export const Dashboard: React.FC = () => {
   const { state } = useVehicleAPI();
@@ -16,6 +39,14 @@ export const Dashboard: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<PageType>('grid');
   const [mergeStepBackground, setMergeStepBackground] = useState(0);
   const [mergeColor, setMergeColor] = useState<string | null>(null);
+  const [currentStation, setCurrentStation] = useState<RadioStation | null>(null);
+  const [currentOnlineTrack, setCurrentOnlineTrack] = useState<OnlineTrack | null>(null);
+  const [playbackSource, setPlaybackSource] = useState<PlaybackSource>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [volume, setVolume] = useState(70);
+  const [playbackError, setPlaybackError] = useState<string | null>(null);
+  const [loadingStationId, setLoadingStationId] = useState<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
 
   // Preload car images
   useEffect(() => {
@@ -24,6 +55,104 @@ export const Dashboard: React.FC = () => {
     img1.onload = () => setImageLoaded(true);
     const img2 = new Image();
     img2.src = '/lcar.png';
+  }, []);
+
+  const handleSelectStation = (station: RadioStation) => {
+    // Stop online music if playing
+    if (playbackSource === 'online') {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = '';
+      }
+      setCurrentOnlineTrack(null);
+    }
+
+    // Prevent multiple simultaneous plays
+    if (currentStation?.stationuuid === station.stationuuid && isPlaying) {
+      return;
+    }
+
+    setCurrentStation(station);
+    setPlaybackSource('radio');
+    setIsPlaying(true);
+    setPlaybackError(null);
+    setLoadingStationId(station.stationuuid);
+    
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.src = '';
+      // Small delay to ensure audio element is reset
+      setTimeout(() => {
+        if (audioRef.current) {
+          audioRef.current.src = station.url;
+          audioRef.current.play().catch(error => {
+            console.error('Playback error:', error);
+            setPlaybackError(`Failed to play "${station.name}". This station may not support streaming or have CORS issues.`);
+            setIsPlaying(false);
+            setLoadingStationId(null);
+          });
+        }
+      }, 100);
+    }
+  };
+
+  const handleOnlineTrackPlay = (track: OnlineTrack) => {
+    // Stop radio if playing
+    if (playbackSource === 'radio') {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = '';
+      }
+      setCurrentStation(null);
+    }
+
+    setCurrentOnlineTrack(track);
+    setPlaybackSource('online');
+    setIsPlaying(true);
+    
+    if (audioRef.current) {
+      audioRef.current.src = track.url;
+      audioRef.current.volume = volume / 100;
+      audioRef.current.play().catch((err) => console.log('Play error:', err));
+    }
+  };
+
+  const togglePlayPause = () => {
+    if (!currentStation || !audioRef.current) return;
+    
+    if (isPlaying) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      audioRef.current.play().catch(error => console.error('Playback error:', error));
+      setIsPlaying(true);
+    }
+  };
+
+  const handleVolumeChange = (newVolume: number) => {
+    setVolume(newVolume);
+    if (audioRef.current) {
+      audioRef.current.volume = newVolume / 100;
+    }
+  };
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume / 100;
+    }
+  }, []);
+
+  // Clear loading state when audio actually starts playing
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const handlePlaying = () => {
+      setLoadingStationId(null);
+    };
+
+    audio.addEventListener('playing', handlePlaying);
+    return () => audio.removeEventListener('playing', handlePlaying);
   }, []);
 
   useEffect(() => {
@@ -69,6 +198,8 @@ export const Dashboard: React.FC = () => {
       backgroundColor: mergeStepBackground >= 3 && mergeColor ? mergeColor : 'transparent',
       transition: mergeStepBackground >= 3 ? 'background-color 2s ease' : 'none'
     }}>
+      <audio ref={audioRef} crossOrigin="anonymous" />
+
       {currentPage === 'grid' && (
         <div className="carplay-content" style={{
           backgroundColor: 'transparent',
@@ -94,7 +225,40 @@ export const Dashboard: React.FC = () => {
       )}
 
       {currentPage === 'player' && (
-        <PlayerPage onBack={() => setCurrentPage('grid')} />
+        <PlayerPage
+          onBack={() => setCurrentPage('grid')}
+          onNavigateToRadio={() => setCurrentPage('radio')}
+          onNavigateToOnline={() => setCurrentPage('online')}
+          currentStation={currentStation}
+          currentOnlineTrack={currentOnlineTrack}
+          playbackSource={playbackSource}
+          isPlaying={isPlaying}
+          volume={volume}
+          onTogglePlayPause={togglePlayPause}
+          onVolumeChange={handleVolumeChange}
+        />
+      )}
+
+      {currentPage === 'radio' && (
+        <RadioPage
+          onBack={() => setCurrentPage('player')}
+          onSelectStation={handleSelectStation}
+          initialError={playbackError}
+          loadingStationId={loadingStationId}
+        />
+      )}
+
+      {currentPage === 'online' && (
+        <OnlinePage 
+          onBack={() => setCurrentPage('player')}
+          audioRef={audioRef as React.RefObject<HTMLAudioElement>}
+          onTrackPlay={handleOnlineTrackPlay}
+          currentTrack={currentOnlineTrack}
+          isPlaying={isPlaying}
+          setIsPlaying={setIsPlaying}
+          volume={volume}
+          setVolume={setVolume}
+        />
       )}
     </div>
   );
