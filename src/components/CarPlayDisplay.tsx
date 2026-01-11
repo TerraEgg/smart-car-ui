@@ -1,6 +1,6 @@
 import React from 'react';
 import type { VehicleState } from '../types/vehicle';
-import { CarModel3D } from './CarModel3D';
+import { CarModel3D } from '../dashboard/components/CarModel3D';
 import './CarPlayDisplay.css';
 
 interface CarPlayDisplayProps {

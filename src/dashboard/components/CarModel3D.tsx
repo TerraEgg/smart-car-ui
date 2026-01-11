@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, useGLTF, PerspectiveCamera } from '@react-three/drei';
+import { OrbitControls, useGLTF } from '@react-three/drei';
 import './CarModel3D.css';
 
 interface CarModel3DProps {

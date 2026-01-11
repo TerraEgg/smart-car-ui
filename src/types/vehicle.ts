@@ -5,6 +5,12 @@ export interface VehicleState {
   insideTemp: number;
   outsideTemp: number;
   fuelLevel: number;
+  fuel: number;
+  mileage: number;
+  battery: number;
+  oil: number;
+  rpm: number;
+  RPM: number;
   lights: 'off' | 'low' | 'high';
   wipers: 'off' | 'slow' | 'medium' | 'fast';
   doorLocked: boolean;
@@ -28,7 +34,6 @@ export interface VehicleState {
   batteryHealth: number; // 0-100
   oilLevel: number; // 0-100
   tirePressure: number; // 0-100
-  rpm: number; // 0-7000
 }
 
 export type VehicleAction = 

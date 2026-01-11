@@ -1,5 +1,4 @@
 import React from 'react';
-import { useVehicleAPI } from '../../api/VehicleContext';
 import './StartScreen.css';
 
 export const StartScreen: React.FC = () => {
