@@ -21,7 +21,7 @@ export const VehicleControls: React.FC = () => {
     reset,
   } = useVehicleAPI();
   const getNextLights = () => {
-    const lights: Array<'off' | 'parking' | 'dipped' | 'high'> = ['off', 'parking', 'dipped', 'high'];
+    const lights: Array<'off' | 'low' | 'high'> = ['off', 'low', 'high'];
     const currentIndex = lights.indexOf(state.lights);
     return lights[(currentIndex + 1) % lights.length];
   };

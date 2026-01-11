@@ -8,6 +8,7 @@ const initialState: VehicleState = {
   insideTemp: 20,
   outsideTemp: 15,
   fuelLevel: 80,
+  fuel: 80,
   lights: 'off',
   wipers: 'off',
   doorLocked: true,
@@ -29,9 +30,13 @@ const initialState: VehicleState = {
   weather: 'clear',
   time: new Date().toLocaleTimeString(),
   batteryHealth: 95,
+  battery: 95,
   oilLevel: 85,
+  oil: 85,
+  mileage: 12345,
   tirePressure: 90,
   rpm: 0,
+  RPM: 0,
 };
 
 function vehicleReducer(state: VehicleState, action: VehicleAction): VehicleState {
@@ -148,7 +153,7 @@ export function useVehicleState() {
     dispatch({ type: 'SET_SPEED', speed }), []);
   const changeGear = useCallback((gear: 'P' | 'R' | 'N' | 'D') => 
     dispatch({ type: 'CHANGE_GEAR', gear }), []);
-  const toggleLights = useCallback((lights: 'off' | 'parking' | 'dipped' | 'high') => 
+  const toggleLights = useCallback((lights: 'off' | 'low' | 'high') => 
     dispatch({ type: 'TOGGLE_LIGHTS', lights }), []);
   const toggleWipers = useCallback((wipers: 'off' | 'slow' | 'medium' | 'fast') => 
     dispatch({ type: 'TOGGLE_WIPERS', wipers }), []);

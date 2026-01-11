@@ -7,7 +7,7 @@ export interface VehicleAPI {
   stopEngine: () => void;
   setSpeed: (speed: number) => void;
   changeGear: (gear: 'P' | 'R' | 'N' | 'D') => void;
-  toggleLights: (lights: 'off' | 'parking' | 'dipped' | 'high') => void;
+  toggleLights: (lights: 'off' | 'low' | 'high') => void;
   toggleWipers: (wipers: 'off' | 'slow' | 'medium' | 'fast') => void;
   toggleDoorLock: () => void;
   toggleWindow: (window: 'frontLeft' | 'frontRight' | 'rearLeft' | 'rearRight') => void;

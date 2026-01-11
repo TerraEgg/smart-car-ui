@@ -5,7 +5,7 @@ export interface VehicleState {
   insideTemp: number;
   outsideTemp: number;
   fuelLevel: number;
-  lights: 'off' | 'parking' | 'dipped' | 'high';
+  lights: 'off' | 'low' | 'high';
   wipers: 'off' | 'slow' | 'medium' | 'fast';
   doorLocked: boolean;
   windows: {
@@ -36,7 +36,7 @@ export type VehicleAction =
   | { type: 'STOP_ENGINE' }
   | { type: 'SET_SPEED'; speed: number }
   | { type: 'CHANGE_GEAR'; gear: 'P' | 'R' | 'N' | 'D' }
-  | { type: 'TOGGLE_LIGHTS'; lights: 'off' | 'parking' | 'dipped' | 'high' }
+  | { type: 'TOGGLE_LIGHTS'; lights: 'off' | 'low' | 'high' }
   | { type: 'TOGGLE_WIPERS'; wipers: 'off' | 'slow' | 'medium' | 'fast' }
   | { type: 'TOGGLE_DOOR_LOCK' }
   | { type: 'TOGGLE_WINDOW'; window: 'frontLeft' | 'frontRight' | 'rearLeft' | 'rearRight' }
