@@ -58,6 +58,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ onBack }) => {
           display: 'flex',
           alignItems: 'center',
           gap: '6px',
+          zIndex: 50,
         }}
       >
         <ArrowLeft size={18} />
@@ -84,21 +85,25 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ onBack }) => {
         </div>
       </div>
 
-      {/* Settings Content */}
+      {/* Settings Content - Grid Layout */}
       <div
         style={{
           flex: 1,
           padding: '20px',
           overflow: 'auto',
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gap: '16px',
+          alignContent: 'start',
         }}
       >
-        {/* Weather Settings */}
+        {/* Weather Tile */}
         <div
           style={{
+            gridColumn: '1 / -1',
             backgroundColor: 'rgba(255, 255, 255, 0.9)',
             borderRadius: '12px',
             padding: '20px',
-            marginBottom: '16px',
             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
           }}
         >

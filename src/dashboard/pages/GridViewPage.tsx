@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
-import { Radio, ArrowLeft, Settings } from 'lucide-react';
+import { Radio, ArrowLeft, Settings, MapPin } from 'lucide-react';
 import { useVehicleAPI } from '../../api/VehicleContext';
 
 interface GridViewPageProps {
   onNavigateToMyBMW: () => void;
   onNavigateToPlayer: () => void;
   onNavigateToSettings: () => void;
+  onNavigateToGPS: () => void;
   onMergeStepChange?: (step: number, color: string | null) => void;
   onBack?: () => void;
 }
 
-export const GridViewPage: React.FC<GridViewPageProps> = ({ onNavigateToMyBMW, onNavigateToPlayer, onNavigateToSettings, onMergeStepChange, onBack }) => {
+export const GridViewPage: React.FC<GridViewPageProps> = ({ onNavigateToMyBMW, onNavigateToPlayer, onNavigateToSettings, onNavigateToGPS, onMergeStepChange, onBack }) => {
   const { state } = useVehicleAPI();
   const [mergeStep, setMergeStep] = useState(0);
   const [clickedTileColor, setClickedTileColor] = useState<string | null>(null);
@@ -54,6 +55,10 @@ export const GridViewPage: React.FC<GridViewPageProps> = ({ onNavigateToMyBMW, o
 
   const handlePlayerTileClick = () => {
     handleTileClick('#ffdfbb', onNavigateToPlayer);
+  };
+
+  const handleGPSTileClick = () => {
+    handleTileClick('#bae1ff', onNavigateToGPS);
   };
 
   const handleSettingsTileClick = () => {
@@ -262,13 +267,37 @@ export const GridViewPage: React.FC<GridViewPageProps> = ({ onNavigateToMyBMW, o
         {/* Second row */}
         <div 
           className="tile tile-medium" 
+          onClick={handleGPSTileClick}
           style={{ 
-            backgroundColor: mergeStep >= 2 && clickedTileColor ? clickedTileColor : '#ffffba',
+            backgroundColor: mergeStep >= 2 && clickedTileColor ? clickedTileColor : '#bae1ff',
             transition: `background-color 0.5s ease`,
             boxShadow: isAnimating && mergeStep >= 3 ? 'none' : '0 4px 12px rgba(0, 0, 0, 0.15)',
+            cursor: isAnimating ? 'default' : 'pointer',
             pointerEvents: isAnimating && mergeStep >= 3 ? 'none' : 'auto',
           }}
-        ></div>
+        >
+          <div style={{
+            opacity: isAnimating ? 0 : 1,
+            transition: 'opacity 0.5s ease',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            width: '100%',
+            height: '100%'
+          }}>
+            <MapPin size={64} color="#6b4a5a" strokeWidth={1.5} />
+            <div style={{ 
+              fontSize: '28px', 
+              fontWeight: '500',
+              color: '#6b4a5a',
+              fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "SF Pro Display", sans-serif'
+            }}>
+              GPS
+            </div>
+          </div>
+        </div>
         
         <div 
           className="tile tile-medium" 

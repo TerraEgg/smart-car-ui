@@ -7,6 +7,7 @@ import { PlayerPage } from '../pages/PlayerPage';
 import { RadioPage } from '../pages/RadioPage';
 import { OnlinePage } from '../pages/OnlinePage';
 import { SettingsPage } from '../pages/SettingsPage';
+import { GPSPage } from '../pages/GPSPage';
 import './Dashboard.css';
 
 interface RadioStation {
@@ -29,7 +30,7 @@ interface OnlineTrack {
   isLocal?: boolean;
 }
 
-type PageType = 'grid' | 'mybmw' | 'player' | 'radio' | 'online' | 'settings';
+type PageType = 'grid' | 'mybmw' | 'player' | 'radio' | 'online' | 'settings' | 'gps';
 type PlaybackSource = 'radio' | 'online' | null;
 
 export const Dashboard: React.FC = () => {
@@ -218,6 +219,7 @@ export const Dashboard: React.FC = () => {
             onNavigateToMyBMW={() => setCurrentPage('mybmw')}
             onNavigateToPlayer={() => setCurrentPage('player')}
             onNavigateToSettings={() => setCurrentPage('settings')}
+            onNavigateToGPS={() => setCurrentPage('gps')}
             onMergeStepChange={(step, color) => {
               setMergeStepBackground(step);
               setMergeColor(color);
@@ -269,6 +271,9 @@ export const Dashboard: React.FC = () => {
 
       {currentPage === 'settings' && (
         <SettingsPage onBack={() => setCurrentPage('grid')} />
+      )}
+      {currentPage === 'gps' && (
+        <GPSPage onBack={() => setCurrentPage('grid')} />
       )}
     </div>
   );
