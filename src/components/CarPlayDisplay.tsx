@@ -21,7 +21,7 @@ export const CarPlayDisplay: React.FC<CarPlayDisplayProps> = ({ state }) => {
           {/* Second row */}
           <div className="tile tile-medium" style={{ backgroundColor: '#ffffba' }}></div>
           <div className="tile tile-medium" style={{ backgroundColor: '#baffc9' }}></div>
-          <div className="tile tile-medium" style={{ backgroundColor: '#bae1ff' }}></div>
+          <div className="tile tile-medium" style={{ backgroundColor: ' #ffffba' }}></div>
         </div>
 
         <div className="tab-dots">

@@ -136,7 +136,7 @@ export const GPSPage: React.FC<GPSPageProps> = ({ onBack }) => {
       style={{
         width: '100%',
         height: '100%',
-        backgroundColor: '#bae1ff',
+        backgroundColor: '#ffffba',
         display: 'flex',
         flexDirection: 'column',
         opacity: isFadingOut ? 0 : isFadingIn ? 0 : 1,
@@ -152,7 +152,7 @@ export const GPSPage: React.FC<GPSPageProps> = ({ onBack }) => {
           top: '20px',
           left: '20px',
           padding: '10px 16px',
-          backgroundColor: 'rgba(255, 255, 255, 0.95)',
+          backgroundColor: 'rgba(255, 255, 186, 0.98)',
           border: 'none',
           borderRadius: '8px',
           cursor: 'pointer',
@@ -186,13 +186,11 @@ export const GPSPage: React.FC<GPSPageProps> = ({ onBack }) => {
           style={{
             display: 'flex',
             gap: '8px',
-            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+            backgroundColor: 'rgba(255, 255, 186, 0.98)',
             borderRadius: '8px',
             padding: '8px 12px',
             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-            alignItems: 'center',
             flexDirection: 'column',
-            alignItems: 'stretch',
           }}
         >
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center', position: 'relative' }}>

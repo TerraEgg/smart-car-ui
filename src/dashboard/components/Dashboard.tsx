@@ -8,6 +8,7 @@ import { RadioPage } from '../pages/RadioPage';
 import { OnlinePage } from '../pages/OnlinePage';
 import { SettingsPage } from '../pages/SettingsPage';
 import { GPSPage } from '../pages/GPSPage';
+import { NotificationDisplay } from '../../components/NotificationDisplay';
 import './Dashboard.css';
 
 interface RadioStation {
@@ -275,6 +276,7 @@ export const Dashboard: React.FC = () => {
       {currentPage === 'gps' && (
         <GPSPage onBack={() => setCurrentPage('grid')} />
       )}
+      <NotificationDisplay />
     </div>
   );
 };

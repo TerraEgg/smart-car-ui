@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Radio, ArrowLeft, Settings, MapPin } from 'lucide-react';
+import { Radio, ArrowLeft, Settings, MapPin, Thermometer } from 'lucide-react';
 import { useVehicleAPI } from '../../api/VehicleContext';
 
 interface GridViewPageProps {
@@ -58,7 +58,7 @@ export const GridViewPage: React.FC<GridViewPageProps> = ({ onNavigateToMyBMW, o
   };
 
   const handleGPSTileClick = () => {
-    handleTileClick('#bae1ff', onNavigateToGPS);
+    handleTileClick('#ffffba', onNavigateToGPS);
   };
 
   const handleSettingsTileClick = () => {
@@ -269,7 +269,7 @@ export const GridViewPage: React.FC<GridViewPageProps> = ({ onNavigateToMyBMW, o
           className="tile tile-medium" 
           onClick={handleGPSTileClick}
           style={{ 
-            backgroundColor: mergeStep >= 2 && clickedTileColor ? clickedTileColor : '#bae1ff',
+            backgroundColor: mergeStep >= 2 && clickedTileColor ? clickedTileColor : '#ffffba',
             transition: `background-color 0.5s ease`,
             boxShadow: isAnimating && mergeStep >= 3 ? 'none' : '0 4px 12px rgba(0, 0, 0, 0.15)',
             cursor: isAnimating ? 'default' : 'pointer',
@@ -302,12 +302,34 @@ export const GridViewPage: React.FC<GridViewPageProps> = ({ onNavigateToMyBMW, o
         <div 
           className="tile tile-medium" 
           style={{ 
-            backgroundColor: mergeStep >= 2 && clickedTileColor ? clickedTileColor : '#baffc9',
+            backgroundColor: mergeStep >= 2 && clickedTileColor ? clickedTileColor : '#c5ffba',
             transition: `background-color 0.5s ease`,
             boxShadow: isAnimating && mergeStep >= 3 ? 'none' : '0 4px 12px rgba(0, 0, 0, 0.15)',
-            pointerEvents: isAnimating && mergeStep >= 3 ? 'none' : 'auto'
+            pointerEvents: isAnimating && mergeStep >= 3 ? 'none' : 'auto',
           }}
-        ></div>
+        >
+          <div style={{
+            opacity: isAnimating ? 0 : 1,
+            transition: 'opacity 0.5s ease',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            width: '100%',
+            height: '100%'
+          }}>
+            <Thermometer size={64} color="#6b4a5a" strokeWidth={1.5} />
+            <div style={{ 
+              fontSize: '28px', 
+              fontWeight: '500',
+              color: '#6b4a5a',
+              fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "SF Pro Display", sans-serif'
+            }}>
+              Heat
+            </div>
+          </div>
+        </div>
         
         <div 
           className="tile tile-medium" 
