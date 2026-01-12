@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { useVehicleAPI } from '../../api/VehicleContext';
 import { CarModel3D } from '../components/CarModel3D';
@@ -32,6 +32,19 @@ class ErrorBoundary extends React.Component<{children: React.ReactNode}, {hasErr
 export const MyBMWPage: React.FC<MyBMWPageProps> = ({ onBack }) => {
   const { state } = useVehicleAPI();
   const [isFadingOut, setIsFadingOut] = useState(false);
+  const [isFadingIn, setIsFadingIn] = useState(true);
+  const [is3D, setIs3D] = useState(false);
+
+  useEffect(() => {
+    // Preload all car images
+    const images = ['/0do.png', '/rdo.png', '/ldo.png', '/2do.png'];
+    images.forEach(src => {
+      const img = new Image();
+      img.src = src;
+    });
+    
+    setIsFadingIn(false);
+  }, []);
   const [dragPosition, setDragPosition] = useState({ x: 20, y: 20 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
@@ -101,6 +114,21 @@ export const MyBMWPage: React.FC<MyBMWPageProps> = ({ onBack }) => {
     }, 300);
   };
 
+  const getCarImage = () => {
+    const frontLeft = state.doors.frontLeft;
+    const frontRight = state.doors.frontRight;
+
+    if (frontLeft && frontRight) {
+      return '/2do.png'; // Both doors open
+    } else if (frontRight) {
+      return '/rdo.png'; // Right door open
+    } else if (frontLeft) {
+      return '/ldo.png'; // Left door open
+    } else {
+      return '/0do.png'; // No doors open
+    }
+  };
+
   return (
     <div 
       className="mybmw-view" 
@@ -114,7 +142,7 @@ export const MyBMWPage: React.FC<MyBMWPageProps> = ({ onBack }) => {
       }}
     >
       <div style={{ 
-        opacity: isFadingOut ? 0 : 1,
+        opacity: isFadingOut ? 0 : isFadingIn ? 0 : 1,
         transition: 'opacity 0.3s ease-out',
         backgroundColor: '#f2d2dc',
         display: 'flex',
@@ -122,9 +150,57 @@ export const MyBMWPage: React.FC<MyBMWPageProps> = ({ onBack }) => {
         justifyContent: 'center',
         width: '100%',
         height: '100%',
-        padding: '0'
+        padding: '0',
+        flexDirection: 'column'
       }}>
-        {/* 3D Model - Main Focus */}
+        {/* 2D/3D Switch */}
+        <div style={{
+          position: 'absolute',
+          top: '20px',
+          right: '20px',
+          display: 'flex',
+          gap: '8px',
+          zIndex: 200,
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          padding: '8px',
+          borderRadius: '12px',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
+        }}>
+          <button
+            onClick={() => setIs3D(false)}
+            style={{
+              padding: '8px 16px',
+              border: 'none',
+              borderRadius: '8px',
+              backgroundColor: !is3D ? '#6b4a5a' : 'transparent',
+              color: !is3D ? '#fff' : '#6b4a5a',
+              fontWeight: '500',
+              fontSize: '13px',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            2D
+          </button>
+          <button
+            onClick={() => setIs3D(true)}
+            style={{
+              padding: '8px 16px',
+              border: 'none',
+              borderRadius: '8px',
+              backgroundColor: is3D ? '#6b4a5a' : 'transparent',
+              color: is3D ? '#fff' : '#6b4a5a',
+              fontWeight: '500',
+              fontSize: '13px',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            3D
+          </button>
+        </div>
+
+        {/* 2D/3D Model - Main Focus */}
         <div style={{
           width: '100%',
           height: '100%',
@@ -132,9 +208,24 @@ export const MyBMWPage: React.FC<MyBMWPageProps> = ({ onBack }) => {
           alignItems: 'center',
           justifyContent: 'center'
         }}>
-          <ErrorBoundary>
-            <CarModel3D isEngineRunning={state.isEngineRunning} />
-          </ErrorBoundary>
+          {!is3D ? (
+            // 2D Image View
+            <img
+              src={getCarImage()}
+              alt="BMW M4 Competition"
+              style={{
+                maxWidth: '90%',
+                maxHeight: '90%',
+                objectFit: 'contain',
+                animation: 'fadeIn 0.5s ease-out'
+              }}
+            />
+          ) : (
+            // 3D Model View
+            <ErrorBoundary>
+              <CarModel3D isEngineRunning={state.isEngineRunning} />
+            </ErrorBoundary>
+          )}
         </div>
 
         {/* Stats Panel - Draggable */}
@@ -245,6 +336,16 @@ export const MyBMWPage: React.FC<MyBMWPageProps> = ({ onBack }) => {
           </div>
         </div>
       </div>
+      <style>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+      `}</style>
     </div>
   );
 };

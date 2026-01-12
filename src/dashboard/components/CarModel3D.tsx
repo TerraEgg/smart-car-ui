@@ -1,6 +1,7 @@
-import React, { Suspense, useEffect, useState } from 'react';
-import { Canvas } from '@react-three/fiber';
+import React, { Suspense, useEffect, useState, useRef } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, useGLTF, Preload } from '@react-three/drei';
+import { useVehicleAPI } from '../../api/VehicleContext';
 import './CarModel3D.css';
 
 interface CarModel3DProps {
@@ -9,6 +10,110 @@ interface CarModel3DProps {
 
 function CarModel({ onLoaded }: { onLoaded: () => void }) {
   const gltf = useGLTF('/2025_bmw_m4_competition.glb');
+  const { state } = useVehicleAPI();
+  const meshRefsRef = useRef<any[]>([]);
+  const wheelsRef = useRef<any[]>([]);
+  const offsetAppliedRef = useRef(false);
+  const wheelRotationRef = useRef(0);
+
+  // Store mesh references for windows and wheels
+  useEffect(() => {
+    if (!gltf.scene || offsetAppliedRef.current) return;
+
+    const windowMeshNames = {
+      frontRight: 'm4window_Mesh_4_car_glass_m4car_glass1_0',
+      frontLeft: 'm4left_door_Mesh_2_car_body_m4car_glass1_0',
+    };
+
+    gltf.scene.traverse((child: any) => {
+      // Windows
+      if (child.name === windowMeshNames.frontRight) {
+        meshRefsRef.current.push({
+          name: 'frontRight',
+          mesh: child,
+          originalPosition: child.position.clone(),
+          originalScale: child.scale.clone(),
+        });
+        console.log('Found right window mesh:', child.name);
+      } else if (child.name === windowMeshNames.frontLeft) {
+        meshRefsRef.current.push({
+          name: 'frontLeft',
+          mesh: child,
+          originalPosition: child.position.clone(),
+          originalScale: child.scale.clone(),
+        });
+        console.log('Found left window mesh:', child.name);
+      }
+
+      // Wheels - find all individual tire meshes
+      if (child.isMesh && child.name.includes('Tire') || 
+          child.name.includes('Rim') || 
+          child.name.includes('TireBlur') ||
+          child.name.includes('BrakeDisc') ||
+          child.name.includes('TNRRims')) {
+        wheelsRef.current.push({
+          name: child.name,
+          mesh: child,
+        });
+      }
+    });
+
+    console.log('Total wheel meshes found:', wheelsRef.current.length);
+    wheelsRef.current.forEach(w => console.log('Wheel mesh:', w.name));
+
+    offsetAppliedRef.current = true;
+  }, [gltf]);
+
+  // Use frame loop to animate windows and wheels
+  useFrame(() => {
+    // Windows animation
+    if (meshRefsRef.current.length > 0) {
+      meshRefsRef.current.forEach((ref) => {
+        const slideDistance = 0.5; // Maximum slide distance
+        const slideSpeed = 0.02; // Speed of sliding
+        
+        if (ref.name === 'frontRight') {
+          const targetZ = state.windows.frontRight 
+            ? ref.originalPosition.z - slideDistance 
+            : ref.originalPosition.z;
+          
+          // Smoothly move towards target
+          if (Math.abs(ref.mesh.position.z - targetZ) > 0.001) {
+            ref.mesh.position.z += (targetZ - ref.mesh.position.z) * slideSpeed;
+          } else {
+            ref.mesh.position.z = targetZ;
+          }
+        } else if (ref.name === 'frontLeft') {
+          const targetZ = state.windows.frontLeft 
+            ? ref.originalPosition.z - slideDistance 
+            : ref.originalPosition.z;
+          
+          // Smoothly move towards target
+          if (Math.abs(ref.mesh.position.z - targetZ) > 0.001) {
+            ref.mesh.position.z += (targetZ - ref.mesh.position.z) * slideSpeed;
+          } else {
+            ref.mesh.position.z = targetZ;
+          }
+        }
+      });
+    }
+
+    // Wheel rotation based on speed
+    if (wheelsRef.current.length > 0) {
+      // Calculate rotation based on speed
+      const rotationPerFrame = (state.speed / 100) * 0.15;
+      wheelRotationRef.current += rotationPerFrame;
+
+      console.log('Speed:', state.speed, 'Rotation per frame:', rotationPerFrame, 'Total rotation:', wheelRotationRef.current);
+
+      wheelsRef.current.forEach((wheel) => {
+        if (wheel.mesh) {
+          // Rotate individual mesh around X axis
+          wheel.mesh.rotation.x = wheelRotationRef.current;
+        }
+      });
+    }
+  });
   
   useEffect(() => {
     onLoaded();
@@ -49,7 +154,6 @@ function SceneContent({ onLoaded }: { onLoaded: () => void }) {
 
 export const CarModel3D: React.FC<CarModel3DProps> = ({ isEngineRunning }) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [canvasReady, setCanvasReady] = useState(false);
 
   const handleModelLoaded = React.useCallback(() => {
     setIsLoading(false);
@@ -115,36 +219,21 @@ export const CarModel3D: React.FC<CarModel3DProps> = ({ isEngineRunning }) => {
           </div>
         </div>
       )}
-      <Suspense fallback={<div />}>
-        {canvasReady && (
-          <Canvas
-            gl={{
-              antialias: true,
-              alpha: true,
-              powerPreference: 'high-performance',
-              failIfMajorPerformanceCaveat: false,
-              preserveDrawingBuffer: true,
-            }}
-            camera={{ position: [1.99, 1, 1.51], fov: 45 }}
-            style={{ width: '100%', height: '100%' }}
-            onCreated={() => {
-              setTimeout(() => {
-                setIsLoading(false);
-              }, 100);
-            }}
-          >
-            <SceneContent onLoaded={handleModelLoaded} />
-          </Canvas>
-        )}
-        {!canvasReady && (
-          <div style={{ width: '100%', height: '100%' }} ref={(el) => {
-            if (el) {
-              // Delay canvas mounting to avoid context issues
-              setTimeout(() => setCanvasReady(true), 50);
-            }
-          }} />
-        )}
-      </Suspense>
+      <Canvas
+        gl={{
+          antialias: true,
+          alpha: true,
+          powerPreference: 'high-performance',
+          failIfMajorPerformanceCaveat: false,
+          preserveDrawingBuffer: true,
+        }}
+        camera={{ position: [1.99, 1, 1.51], fov: 45 }}
+        style={{ width: '100%', height: '100%' }}
+      >
+        <Suspense fallback={null}>
+          <SceneContent onLoaded={handleModelLoaded} />
+        </Suspense>
+      </Canvas>
       <style>{`
         @keyframes spin {
           to { transform: rotate(360deg); }

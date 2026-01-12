@@ -14,6 +14,12 @@ export interface VehicleState {
   lights: 'off' | 'low' | 'high';
   wipers: 'off' | 'slow' | 'medium' | 'fast';
   doorLocked: boolean;
+  doors: {
+    frontLeft: boolean;
+    frontRight: boolean;
+    rearLeft: boolean;
+    rearRight: boolean;
+  };
   windows: {
     frontLeft: boolean;
     frontRight: boolean;
@@ -44,6 +50,7 @@ export type VehicleAction =
   | { type: 'TOGGLE_LIGHTS'; lights: 'off' | 'low' | 'high' }
   | { type: 'TOGGLE_WIPERS'; wipers: 'off' | 'slow' | 'medium' | 'fast' }
   | { type: 'TOGGLE_DOOR_LOCK' }
+  | { type: 'TOGGLE_DOOR'; door: 'frontLeft' | 'frontRight' | 'rearLeft' | 'rearRight' }
   | { type: 'TOGGLE_WINDOW'; window: 'frontLeft' | 'frontRight' | 'rearLeft' | 'rearRight' }
   | { type: 'SET_SEAT_HEAT'; seat: 'driver' | 'passenger' | 'rearLeft' | 'rearRight'; level: 0 | 1 | 2 | 3 }
   | { type: 'SET_INSIDE_TEMP'; temp: number }

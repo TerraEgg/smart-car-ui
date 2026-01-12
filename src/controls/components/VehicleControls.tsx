@@ -12,6 +12,7 @@ export const VehicleControls: React.FC = () => {
     toggleLights,
     toggleWipers,
     toggleDoorLock,
+    toggleDoor,
     toggleWindow,
     setSeatHeat,
     setInsideTemp,
@@ -191,31 +192,37 @@ export const VehicleControls: React.FC = () => {
       </div>
 
       <div className="control-section">
+        <h3>Doors</h3>
+        <div className="button-group">
+          <button
+            onClick={() => toggleDoor('frontLeft')}
+            className={`control-btn door ${state.doors.frontLeft ? 'open' : 'closed'}`}
+          >
+            Front L: {state.doors.frontLeft ? 'Open' : 'Closed'}
+          </button>
+          <button
+            onClick={() => toggleDoor('frontRight')}
+            className={`control-btn door ${state.doors.frontRight ? 'open' : 'closed'}`}
+          >
+            Front R: {state.doors.frontRight ? 'Open' : 'Closed'}
+          </button>
+        </div>
+      </div>
+
+      <div className="control-section">
         <h3>Windows</h3>
         <div className="button-group">
           <button
             onClick={() => toggleWindow('frontLeft')}
             className={`control-btn window ${state.windows.frontLeft ? 'open' : 'closed'}`}
           >
-            Front L: {state.windows.frontLeft ? 'Open' : 'Closed'}
+            Front L: {state.windows.frontLeft ? 'Down' : 'Up'}
           </button>
           <button
             onClick={() => toggleWindow('frontRight')}
             className={`control-btn window ${state.windows.frontRight ? 'open' : 'closed'}`}
           >
-            Front R: {state.windows.frontRight ? 'Open' : 'Closed'}
-          </button>
-          <button
-            onClick={() => toggleWindow('rearLeft')}
-            className={`control-btn window ${state.windows.rearLeft ? 'open' : 'closed'}`}
-          >
-            Rear L: {state.windows.rearLeft ? 'Open' : 'Closed'}
-          </button>
-          <button
-            onClick={() => toggleWindow('rearRight')}
-            className={`control-btn window ${state.windows.rearRight ? 'open' : 'closed'}`}
-          >
-            Rear R: {state.windows.rearRight ? 'Open' : 'Closed'}
+            Front R: {state.windows.frontRight ? 'Down' : 'Up'}
           </button>
         </div>
       </div>

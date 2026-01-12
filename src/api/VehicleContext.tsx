@@ -10,6 +10,7 @@ export interface VehicleAPI {
   toggleLights: (lights: 'off' | 'low' | 'high') => void;
   toggleWipers: (wipers: 'off' | 'slow' | 'medium' | 'fast') => void;
   toggleDoorLock: () => void;
+  toggleDoor: (door: 'frontLeft' | 'frontRight' | 'rearLeft' | 'rearRight') => void;
   toggleWindow: (window: 'frontLeft' | 'frontRight' | 'rearLeft' | 'rearRight') => void;
   setSeatHeat: (seat: 'driver' | 'passenger' | 'rearLeft' | 'rearRight', level: 0 | 1 | 2 | 3) => void;
   setInsideTemp: (temp: number) => void;

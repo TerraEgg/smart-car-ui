@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { useVehicleAPI } from '../../api/VehicleContext';
 
@@ -9,6 +9,11 @@ interface SettingsPageProps {
 export const SettingsPage: React.FC<SettingsPageProps> = ({ onBack }) => {
   const { state, setWeather } = useVehicleAPI();
   const [isFadingOut, setIsFadingOut] = useState(false);
+  const [isFadingIn, setIsFadingIn] = useState(true);
+
+  useEffect(() => {
+    setIsFadingIn(false);
+  }, []);
 
   const handleBack = () => {
     setIsFadingOut(true);
@@ -30,7 +35,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ onBack }) => {
         backgroundColor: '#bae1ff',
         display: 'flex',
         flexDirection: 'column',
-        opacity: isFadingOut ? 0 : 1,
+        opacity: isFadingOut ? 0 : isFadingIn ? 0 : 1,
         transition: 'opacity 0.3s ease-out',
         position: 'relative',
       }}

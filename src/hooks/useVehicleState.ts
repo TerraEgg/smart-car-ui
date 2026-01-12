@@ -12,6 +12,12 @@ const initialState: VehicleState = {
   lights: 'off',
   wipers: 'off',
   doorLocked: true,
+  doors: {
+    frontLeft: false,
+    frontRight: false,
+    rearLeft: false,
+    rearRight: false,
+  },
   windows: {
     frontLeft: false,
     frontRight: false,
@@ -78,6 +84,15 @@ function vehicleReducer(state: VehicleState, action: VehicleAction): VehicleStat
     
     case 'TOGGLE_DOOR_LOCK':
       return { ...state, doorLocked: !state.doorLocked };
+    
+    case 'TOGGLE_DOOR':
+      return { 
+        ...state, 
+        doors: {
+          ...state.doors,
+          [action.door]: !state.doors[action.door],
+        },
+      };
     
     case 'TOGGLE_WINDOW':
       return { 
@@ -158,6 +173,8 @@ export function useVehicleState() {
   const toggleWipers = useCallback((wipers: 'off' | 'slow' | 'medium' | 'fast') => 
     dispatch({ type: 'TOGGLE_WIPERS', wipers }), []);
   const toggleDoorLock = useCallback(() => dispatch({ type: 'TOGGLE_DOOR_LOCK' }), []);
+  const toggleDoor = useCallback((door: 'frontLeft' | 'frontRight' | 'rearLeft' | 'rearRight') => 
+    dispatch({ type: 'TOGGLE_DOOR', door }), []);
   const toggleWindow = useCallback((window: 'frontLeft' | 'frontRight' | 'rearLeft' | 'rearRight') => 
     dispatch({ type: 'TOGGLE_WINDOW', window }), []);
   const setSeatHeat = useCallback((seat: 'driver' | 'passenger' | 'rearLeft' | 'rearRight', level: 0 | 1 | 2 | 3) => 
@@ -180,6 +197,7 @@ export function useVehicleState() {
     toggleLights,
     toggleWipers,
     toggleDoorLock,
+    toggleDoor,
     toggleWindow,
     setSeatHeat,
     setInsideTemp,
