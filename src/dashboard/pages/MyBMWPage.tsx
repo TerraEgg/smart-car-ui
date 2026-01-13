@@ -42,6 +42,13 @@ export const MyBMWPage: React.FC<MyBMWPageProps> = ({ onBack }) => {
     return saved === '3D';
   });
 
+  // Dynamic statistics
+  const [distance, setDistance] = useState(0);
+  const [fuel, setFuel] = useState(85);
+  const [battery, setBattery] = useState(87);
+  const [rpm, setRPM] = useState(0);
+  const [oil, setOil] = useState(100);
+
   useEffect(() => {
     // Preload all car images
     const images = ['/0do.png', '/rdo.png', '/ldo.png', '/2do.png'];
@@ -52,6 +59,35 @@ export const MyBMWPage: React.FC<MyBMWPageProps> = ({ onBack }) => {
     
     setIsFadingIn(false);
   }, []);
+
+  // Update statistics based on speed
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // Distance increases: 1 km per second when speed = 100 km/h
+      if (state.speed > 0) {
+        setDistance(prev => prev + (state.speed / 100) * 0.016); // ~1 km per second at 100 km/h
+      }
+
+      // RPM calculation: 0-6000 based on speed
+      const rpmValue = Math.round((state.speed / 200) * 6000); // Max 200 km/h = 6000 RPM
+      setRPM(rpmValue);
+
+      // Fuel consumption: 0.1% per second when moving, more at higher speeds
+      if (state.speed > 0) {
+        setFuel(prev => Math.max(0, prev - (state.speed / 1000) * 0.1));
+      }
+
+      // Battery consumption: similar to fuel
+      if (state.speed > 0) {
+        setBattery(prev => Math.max(0, prev - (state.speed / 1000) * 0.08));
+      }
+
+      // Oil degrades slowly over time: -0.02% per second
+      setOil(prev => Math.max(0, prev - 0.02));
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, [state.speed]);
   const [dragPosition, setDragPosition] = useState({ x: 20, y: 20 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
@@ -303,7 +339,7 @@ export const MyBMWPage: React.FC<MyBMWPageProps> = ({ onBack }) => {
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span style={{ fontWeight: '500', opacity: 0.75 }}>KM</span>
-              <span style={{ fontWeight: '600', color: '#6b4a5a', fontSize: '14px' }}>{Math.round(state.mileage || 0).toLocaleString()}</span>
+              <span style={{ fontWeight: '600', color: '#6b4a5a', fontSize: '14px' }}>{Math.round(distance).toLocaleString()}</span>
             </div>
             
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -313,17 +349,17 @@ export const MyBMWPage: React.FC<MyBMWPageProps> = ({ onBack }) => {
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span style={{ fontWeight: '500', opacity: 0.75 }}>Fuel</span>
-              <span style={{ fontWeight: '600', color: '#6b4a5a', fontSize: '14px' }}>{Math.round(state.fuel || 0)}%</span>
+              <span style={{ fontWeight: '600', color: '#6b4a5a', fontSize: '14px' }}>{Math.round(fuel)}%</span>
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span style={{ fontWeight: '500', opacity: 0.75 }}>Battery</span>
-              <span style={{ fontWeight: '600', color: '#6b4a5a', fontSize: '14px' }}>{Math.round(state.battery || 0)}%</span>
+              <span style={{ fontWeight: '600', color: '#6b4a5a', fontSize: '14px' }}>{Math.round(battery)}%</span>
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span style={{ fontWeight: '500', opacity: 0.75 }}>Oil</span>
-              <span style={{ fontWeight: '600', color: '#6b4a5a', fontSize: '14px' }}>{Math.round(state.oil || 0)}%</span>
+              <span style={{ fontWeight: '600', color: '#6b4a5a', fontSize: '14px' }}>{Math.round(oil)}%</span>
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -338,7 +374,7 @@ export const MyBMWPage: React.FC<MyBMWPageProps> = ({ onBack }) => {
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span style={{ fontWeight: '500', opacity: 0.75 }}>RPM</span>
-              <span style={{ fontWeight: '600', color: '#6b4a5a', fontSize: '14px' }}>{Math.round(state.RPM || 0)}</span>
+              <span style={{ fontWeight: '600', color: '#6b4a5a', fontSize: '14px' }}>{rpm}</span>
             </div>
           </div>
         </div>
