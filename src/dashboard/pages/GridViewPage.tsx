@@ -7,11 +7,12 @@ interface GridViewPageProps {
   onNavigateToPlayer: () => void;
   onNavigateToSettings: () => void;
   onNavigateToGPS: () => void;
+  onNavigateToHeat: () => void;
   onMergeStepChange?: (step: number, color: string | null) => void;
   onBack?: () => void;
 }
 
-export const GridViewPage: React.FC<GridViewPageProps> = ({ onNavigateToMyBMW, onNavigateToPlayer, onNavigateToSettings, onNavigateToGPS, onMergeStepChange, onBack }) => {
+export const GridViewPage: React.FC<GridViewPageProps> = ({ onNavigateToMyBMW, onNavigateToPlayer, onNavigateToSettings, onNavigateToGPS, onNavigateToHeat, onMergeStepChange, onBack }) => {
   const { state } = useVehicleAPI();
   const [mergeStep, setMergeStep] = useState(0);
   const [clickedTileColor, setClickedTileColor] = useState<string | null>(null);
@@ -63,6 +64,10 @@ export const GridViewPage: React.FC<GridViewPageProps> = ({ onNavigateToMyBMW, o
 
   const handleSettingsTileClick = () => {
     handleTileClick('#bae1ff', onNavigateToSettings);
+  };
+
+  const handleHeatTileClick = () => {
+    handleTileClick('#c5ffba', onNavigateToHeat);
   };
 
   // Format time to 12-hour format
@@ -301,10 +306,12 @@ export const GridViewPage: React.FC<GridViewPageProps> = ({ onNavigateToMyBMW, o
         
         <div 
           className="tile tile-medium" 
+          onClick={handleHeatTileClick}
           style={{ 
             backgroundColor: mergeStep >= 2 && clickedTileColor ? clickedTileColor : '#c5ffba',
             transition: `background-color 0.5s ease`,
             boxShadow: isAnimating && mergeStep >= 3 ? 'none' : '0 4px 12px rgba(0, 0, 0, 0.15)',
+            cursor: isAnimating ? 'default' : 'pointer',
             pointerEvents: isAnimating && mergeStep >= 3 ? 'none' : 'auto',
           }}
         >

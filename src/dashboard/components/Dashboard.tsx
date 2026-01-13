@@ -8,6 +8,7 @@ import { RadioPage } from '../pages/RadioPage';
 import { OnlinePage } from '../pages/OnlinePage';
 import { SettingsPage } from '../pages/SettingsPage';
 import { GPSPage } from '../pages/GPSPage';
+import { HeatPage } from '../pages/HeatPage';
 import { NotificationDisplay } from '../../components/NotificationDisplay';
 import './Dashboard.css';
 
@@ -31,7 +32,7 @@ interface OnlineTrack {
   isLocal?: boolean;
 }
 
-type PageType = 'grid' | 'mybmw' | 'player' | 'radio' | 'online' | 'settings' | 'gps';
+type PageType = 'grid' | 'mybmw' | 'player' | 'radio' | 'online' | 'settings' | 'gps' | 'heat';
 type PlaybackSource = 'radio' | 'online' | null;
 
 export const Dashboard: React.FC = () => {
@@ -221,6 +222,7 @@ export const Dashboard: React.FC = () => {
             onNavigateToPlayer={() => setCurrentPage('player')}
             onNavigateToSettings={() => setCurrentPage('settings')}
             onNavigateToGPS={() => setCurrentPage('gps')}
+            onNavigateToHeat={() => setCurrentPage('heat')}
             onMergeStepChange={(step, color) => {
               setMergeStepBackground(step);
               setMergeColor(color);
@@ -275,6 +277,9 @@ export const Dashboard: React.FC = () => {
       )}
       {currentPage === 'gps' && (
         <GPSPage onBack={() => setCurrentPage('grid')} />
+      )}
+      {currentPage === 'heat' && (
+        <HeatPage onBack={() => setCurrentPage('grid')} />
       )}
       <NotificationDisplay />
     </div>
