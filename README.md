@@ -1,73 +1,49 @@
-# React + TypeScript + Vite
+# Smart Car UI
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Project Overview
 
-Currently, two official plugins are available:
+The Smart Car UI is a web-based application designed to replicate the interface and control systems of a  2025 BMW M4 Competition. This application provides a mock in-car dashboard (resembling CarPlay) and a enviroment panel for simulating physical vehicle states.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Thingys I used
+- **Framework:** React 19
+- **Build Tool:** Vite
+- **Language:** TypeScript
+- **3D Graphics Engine:** Three.js (via @react-three/fiber and @react-three/drei)
+- **Icons:** Lucide React
+- **Package Manager:** pnpm
+- **Linting:** ESLint
 
-## React Compiler
+### Vehicle Controls
+A environment manager panel allows users to manipulate the physical state of the simulated vehicle, including:
+- Door mechanisms (locking/unlocking, opening/closing)
+- Lighting systems (headlights, indicators, ambient lighting)
+- Ignition status
+- Window controls
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Installation and Execution
 
-## Expanding the ESLint configuration
+### Prerequisites
+Ensure that a compatible version of Node.js is installed on the host machine.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Setup
+1. Clone the repository
+2. Install the required dependencies using pnpm:
+   ```bash
+   pnpm install
+   ```
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Development Server
+To launch the application in a local development environment:
+```bash
+pnpm dev
+```
+The application will be served locally, typically accessible at `http://localhost:5173`.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Production Build
+To generate a production-ready build:
+```bash
+pnpm build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Compatibility Note
+This web app will not work on mobile devices or small screens. As it was built around a 1920x1080 display.
