@@ -4,7 +4,6 @@
   margin: 0;
   padding: 0;
 }
-
 .app-container {
   display: grid;
   grid-template-columns: 1024px 1fr;
@@ -13,7 +12,6 @@
   background: #0a0a0f;
   gap: 0;
 }
-
 .carplay-section {
   width: 1024px;
   height: 600px;
@@ -23,7 +21,6 @@
   background: #0a0a0f;
   border-right: 2px solid rgba(0, 212, 255, 0.3);
 }
-
 .controls-section {
   flex: 1;
   background: #0a0a0f;

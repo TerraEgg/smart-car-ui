@@ -10,11 +10,9 @@
   opacity: 0;
   animation: fadeIn 0.8s ease-in forwards;
 }
-
 .carplay-display.fade-in {
   opacity: 1;
 }
-
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -23,7 +21,6 @@
     opacity: 1;
   }
 }
-
 .loading-screen-full {
   width: 100%;
   height: 100%;
@@ -33,21 +30,18 @@
   background: #0a0a0f;
   animation: fadeIn 0.5s ease-in;
 }
-
 .loading-content {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 30px;
 }
-
 .loading-title {
   font-size: 32px;
   font-weight: 300;
   color: rgba(255, 255, 255, 0.8);
   letter-spacing: 3px;
 }
-
 .spinner {
   width: 50px;
   height: 50px;
@@ -56,12 +50,14 @@
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
-
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
-
 .carplay-content {
   width: 100%;
   height: 100%;
@@ -71,7 +67,6 @@
   color: white;
   position: relative;
 }
-
 .dashboard-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -85,7 +80,6 @@
   min-height: 480px;
   max-height: 480px;
 }
-
 .tile {
   border-radius: 20px;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -93,12 +87,10 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   overflow: hidden;
 }
-
 .tile:hover {
   transform: scale(1.02);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
 }
-
 .tile-large {
   grid-column: span 2;
   grid-row: span 1;
@@ -109,7 +101,6 @@
   min-height: 230px;
   max-height: 230px;
 }
-
 .tile-medium {
   grid-row: span 1;
   width: 308px;
@@ -119,7 +110,6 @@
   min-height: 230px;
   max-height: 230px;
 }
-
 .tab-dots {
   display: flex;
   justify-content: center;
@@ -131,7 +121,6 @@
   left: 50%;
   transform: translateX(-50%);
 }
-
 .dot {
   width: 8px;
   height: 8px;
@@ -140,11 +129,9 @@
   transition: all 0.3s ease;
   cursor: pointer;
 }
-
 .dot:hover {
   background: rgba(255, 255, 255, 0.5);
 }
-
 .dot.active {
   background: #ffffff;
   width: 24px;

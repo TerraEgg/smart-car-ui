@@ -1,6 +1,5 @@
-import React from 'react';
-import './StartScreen.css';
-
+import React from "react";
+import "./StartScreen.css";
 export const StartScreen: React.FC = () => {
   return (
     <div className="start-screen">
