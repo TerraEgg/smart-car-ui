@@ -34,7 +34,7 @@ export const HeatPage: React.FC<HeatPageProps> = ({ onBack }) => {
   const getHeatColor = (level: number): string => {
     switch (level) {
       case 0:
-        return '#e5e5e5';
+        return '#c5ffba';
       case 1:
         return '#ffd4a3';
       case 2:
@@ -42,7 +42,7 @@ export const HeatPage: React.FC<HeatPageProps> = ({ onBack }) => {
       case 3:
         return '#ff6b6b';
       default:
-        return '#e5e5e5';
+        return '#c5ffba';
     }
   };
 
@@ -64,6 +64,48 @@ export const HeatPage: React.FC<HeatPageProps> = ({ onBack }) => {
         borderRadius: '0 0 20px 0px',
       }}
     >
+      {/* Slider Styling */}
+      <style>{`
+        input[type="range"] {
+          -webkit-appearance: none;
+          width: 100%;
+          accent-color: #c5ffba;
+          background: linear-gradient(to right, #c5ffba 0%, #c5ffba 100%);
+        }
+        input[type="range"]::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 18px;
+          height: 18px;
+          border-radius: 50%;
+          background: #c5ffba;
+          cursor: pointer;
+          border: 2px solid #6b4a5a;
+        }
+        input[type="range"]::-webkit-slider-runnable-track {
+          background: linear-gradient(to right, #c5ffba 0%, #ffffff 100%);
+          height: 6px;
+          border-radius: 3px;
+          border: none;
+        }
+        input[type="range"]::-moz-range-thumb {
+          width: 18px;
+          height: 18px;
+          border-radius: 50%;
+          background: #c5ffba;
+          cursor: pointer;
+          border: 2px solid #6b4a5a;
+        }
+        input[type="range"]::-moz-range-track {
+          background: transparent;
+          border: none;
+        }
+        input[type="range"]::-moz-range-progress {
+          background-color: #c5ffba;
+          height: 6px;
+          border-radius: 3px;
+        }
+      `}</style>
       {/* Back Button */}
       <button
         onClick={handleBack}
@@ -72,7 +114,7 @@ export const HeatPage: React.FC<HeatPageProps> = ({ onBack }) => {
           top: '20px',
           left: '20px',
           padding: '10px 16px',
-          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          backgroundColor: '#ffffff',
           border: 'none',
           borderRadius: '8px',
           cursor: 'pointer',
@@ -114,213 +156,216 @@ export const HeatPage: React.FC<HeatPageProps> = ({ onBack }) => {
         style={{
           flex: 1,
           padding: '20px',
-          display: 'grid',
-          gridTemplateColumns: '1fr 1.2fr',
-          gridTemplateRows: 'auto auto auto',
+          display: 'flex',
           gap: '16px',
           alignContent: 'start',
+          maxWidth: '100%',
         }}
       >
-        {/* Air Conditioning Control */}
+        {/* Left Column - Controls */}
         <div
           style={{
-            backgroundColor: 'rgba(255, 255, 255, 0.8)',
-            borderRadius: '12px',
-            padding: '16px',
-            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
+            flex: 1,
             display: 'flex',
             flexDirection: 'column',
-            gap: '12px',
-            gridColumn: '1 / 2',
-            gridRow: '1 / 2',
+            gap: '16px',
+            minWidth: '0',
           }}
         >
+          {/* Air Conditioning Control */}
           <div
             style={{
-              fontSize: '14px',
-              fontWeight: '600',
-              color: '#6b4a5a',
-              fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "SF Pro Display", sans-serif',
-            }}
-          >
-            A/C Temperature
-          </div>
-          <div
-            style={{
+              backgroundColor: '#ffffff',
+              borderRadius: '12px',
+              padding: '20px',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+              borderLeft: '4px solid #c5ffba',
               display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
+              flexDirection: 'column',
+              gap: '16px',
             }}
           >
-            <input
-              type="range"
-              min="15"
-              max="30"
-              step="0.5"
-              value={state.insideTemp}
-              onChange={(e) => setInsideTemp(Number(e.target.value))}
-              style={{
-                flex: 1,
-                height: '6px',
-                cursor: 'pointer',
-              }}
-            />
             <div
               style={{
-                fontSize: '14px',
+                fontSize: '16px',
                 fontWeight: '600',
                 color: '#6b4a5a',
-                minWidth: '35px',
+                fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "SF Pro Display", sans-serif',
               }}
             >
-              {Math.round(state.insideTemp)}°
+              A/C Temperature
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+              }}
+            >
+              <input
+                type="range"
+                min="15"
+                max="30"
+                step="0.5"
+                value={state.insideTemp}
+                onChange={(e) => setInsideTemp(Number(e.target.value))}
+                style={{
+                  flex: 1,
+                  height: '6px',
+                  cursor: 'pointer',
+                  borderRadius: '3px',
+                }}
+              />
+              <div
+                style={{
+                  fontSize: '18px',
+                  fontWeight: '700',
+                  color: '#6b4a5a',
+                  minWidth: '50px',
+                  textAlign: 'center',
+                }}
+              >
+                {Math.round(state.insideTemp)}°
+              </div>
+            </div>
+          </div>
+
+          {/* Driver Seat Heat */}
+          <div
+            style={{
+              backgroundColor: '#ffffff',
+              borderRadius: '12px',
+              padding: '20px',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+              borderLeft: '4px solid #c5ffba',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '16px',
+            }}
+          >
+            <div
+              style={{
+                fontSize: '16px',
+                fontWeight: '600',
+                color: '#6b4a5a',
+                fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "SF Pro Display", sans-serif',
+              }}
+            >
+              Driver Seat
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                gap: '8px',
+              }}
+            >
+              {[0, 1, 2, 3].map((level) => (
+                <button
+                  key={level}
+                  onClick={() => handleSeatHeatClick('driver', level)}
+                  style={{
+                    flex: 1,
+                    padding: '12px 8px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    backgroundColor: getSeatHeatLevel('driver') === level ? getHeatColor(level) : '#e8f5e9',
+                    color: getSeatHeatLevel('driver') === level ? '#2d5016' : '#6b4a5a',
+                    cursor: 'pointer',
+                    fontSize: '13px',
+                    fontWeight: '600',
+                    transition: 'all 0.2s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    if (getSeatHeatLevel('driver') !== level) {
+                      e.currentTarget.style.transform = 'scale(1.05)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'scale(1)';
+                  }}
+                >
+                  {level === 0 ? 'Off' : level}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Passenger Seat Heat */}
+          <div
+            style={{
+              backgroundColor: '#ffffff',
+              borderRadius: '12px',
+              padding: '20px',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+              borderLeft: '4px solid #c5ffba',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '16px',
+            }}
+          >
+            <div
+              style={{
+                fontSize: '16px',
+                fontWeight: '600',
+                color: '#6b4a5a',
+                fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "SF Pro Display", sans-serif',
+              }}
+            >
+              Passenger Seat
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                gap: '8px',
+              }}
+            >
+              {[0, 1, 2, 3].map((level) => (
+                <button
+                  key={level}
+                  onClick={() => handleSeatHeatClick('passenger', level)}
+                  style={{
+                    flex: 1,
+                    padding: '12px 8px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    backgroundColor: getSeatHeatLevel('passenger') === level ? getHeatColor(level) : '#e8f5e9',
+                    color: getSeatHeatLevel('passenger') === level ? '#2d5016' : '#6b4a5a',
+                    cursor: 'pointer',
+                    fontSize: '13px',
+                    fontWeight: '600',
+                    transition: 'all 0.2s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    if (getSeatHeatLevel('passenger') !== level) {
+                      e.currentTarget.style.transform = 'scale(1.05)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'scale(1)';
+                  }}
+                >
+                  {level === 0 ? 'Off' : level}
+                </button>
+              ))}
             </div>
           </div>
         </div>
 
-        {/* Driver Seat Heat */}
-        <div
-          style={{
-            backgroundColor: 'rgba(255, 255, 255, 0.8)',
-            borderRadius: '12px',
-            padding: '16px',
-            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '12px',
-            gridColumn: '1 / 2',
-            gridRow: '2 / 3',
-          }}
-        >
-          <div
-            style={{
-              fontSize: '14px',
-              fontWeight: '600',
-              color: '#6b4a5a',
-              fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "SF Pro Display", sans-serif',
-            }}
-          >
-            Driver Seat
-          </div>
-          <div
-            style={{
-              display: 'flex',
-              gap: '6px',
-            }}
-          >
-            {[0, 1, 2, 3].map((level) => (
-              <button
-                key={level}
-                onClick={() => handleSeatHeatClick('driver', level)}
-                style={{
-                  flex: 1,
-                  padding: '8px 4px',
-                  borderRadius: '6px',
-                  border: getSeatHeatLevel('driver') === level ? '2px solid #6b4a5a' : '1px solid #ccc',
-                  backgroundColor: getSeatHeatLevel('driver') === level ? getHeatColor(level) : '#f5f5f5',
-                  cursor: 'pointer',
-                  fontSize: '12px',
-                  fontWeight: '600',
-                  color: '#6b4a5a',
-                  transition: 'all 0.2s ease',
-                }}
-                onMouseEnter={(e) => {
-                  if (getSeatHeatLevel('driver') !== level) {
-                    e.currentTarget.style.backgroundColor = getHeatColor(level) + '40';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (getSeatHeatLevel('driver') !== level) {
-                    e.currentTarget.style.backgroundColor = '#f5f5f5';
-                  }
-                }}
-              >
-                {level === 0 ? 'Off' : level}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Passenger Seat Heat */}
-        <div
-          style={{
-            backgroundColor: 'rgba(255, 255, 255, 0.8)',
-            borderRadius: '12px',
-            padding: '16px',
-            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '12px',
-            maxHeight: '140px',
-            overflow: 'hidden',
-            gridColumn: '1 / 2',
-            gridRow: '3 / 4',
-          }}
-        >
-          <div
-            style={{
-              fontSize: '14px',
-              fontWeight: '600',
-              color: '#6b4a5a',
-              fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "SF Pro Display", sans-serif',
-            }}
-          >
-            Passenger Seat
-          </div>
-          <div
-            style={{
-              display: 'flex',
-              gap: '6px',
-            }}
-          >
-            {[0, 1, 2, 3].map((level) => (
-              <button
-                key={level}
-                onClick={() => handleSeatHeatClick('passenger', level)}
-                style={{
-                  flex: 1,
-                  padding: '8px 4px',
-                  borderRadius: '6px',
-                  border: getSeatHeatLevel('passenger') === level ? '2px solid #6b4a5a' : '1px solid #ccc',
-                  backgroundColor: getSeatHeatLevel('passenger') === level ? getHeatColor(level) : '#f5f5f5',
-                  cursor: 'pointer',
-                  fontSize: '12px',
-                  fontWeight: '600',
-                  color: '#6b4a5a',
-                  transition: 'all 0.2s ease',
-                }}
-                onMouseEnter={(e) => {
-                  if (getSeatHeatLevel('passenger') !== level) {
-                    e.currentTarget.style.backgroundColor = getHeatColor(level) + '40';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (getSeatHeatLevel('passenger') !== level) {
-                    e.currentTarget.style.backgroundColor = '#f5f5f5';
-                  }
-                }}
-              >
-                {level === 0 ? 'Off' : level}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Car Image Preview with Clickable Overlay */}
+        {/* Right Column - Car Image Preview with Clickable Overlay */}
         <div
           id="heat-image-container"
           style={{
-            backgroundColor: 'rgba(255, 255, 255, 0.8)',
+            backgroundColor: '#ffffff',
             borderRadius: '12px',
             padding: '16px',
-            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+            borderLeft: '4px solid #c5ffba',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            minHeight: '80px',
-            maxHeight: '450px',
-            gridColumn: '2 / 3',
-            gridRow: '1 / 4',
+            minHeight: '300px',
+            minWidth: '280px',
+            maxWidth: '350px',
             position: 'relative',
             userSelect: 'none',
           }}
@@ -332,7 +377,6 @@ export const HeatPage: React.FC<HeatPageProps> = ({ onBack }) => {
               maxWidth: '90%',
               borderRadius: '8px',
               objectFit: 'contain',
-              marginTop: '0px',
               userSelect: 'none',
               pointerEvents: 'none',
             }}
