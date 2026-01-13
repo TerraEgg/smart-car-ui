@@ -58,13 +58,13 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ onBack }) => {
           top: '20px',
           left: '20px',
           padding: '10px 16px',
-          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          backgroundColor: '#ffffff',
           border: 'none',
           borderRadius: '8px',
           cursor: 'pointer',
           fontSize: '14px',
           fontWeight: '500',
-          color: '#6b4a5a',
+          color: '#1565c0',
           display: 'flex',
           alignItems: 'center',
           gap: '6px',
@@ -80,7 +80,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ onBack }) => {
         style={{
           padding: '30px 20px 0',
           textAlign: 'center',
-          color: '#6b4a5a',
+          color: '#1565c0',
         }}
       >
         <div
@@ -122,7 +122,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ onBack }) => {
             style={{
               fontSize: '16px',
               fontWeight: '600',
-              color: '#6b4a5a',
+              color: '#1565c0',
             }}
           >
             Animations
@@ -131,8 +131,8 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ onBack }) => {
             onClick={() => setAnimationsEnabled(!animationsEnabled)}
             style={{
               padding: '8px 16px',
-              backgroundColor: animationsEnabled ? '#6b4a5a' : 'rgba(107, 74, 90, 0.2)',
-              color: animationsEnabled ? '#FFFFFF' : '#6b4a5a',
+              backgroundColor: animationsEnabled ? '#bae1ff' : 'rgba(186, 225, 255, 0.2)',
+              color: animationsEnabled ? '#1565c0' : '#1565c0',
               border: 'none',
               borderRadius: '8px',
               cursor: 'pointer',
@@ -158,7 +158,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ onBack }) => {
             style={{
               fontSize: '16px',
               fontWeight: '600',
-              color: '#6b4a5a',
+              color: '#1565c0',
               marginBottom: '12px',
             }}
           >
@@ -178,8 +178,8 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ onBack }) => {
                   flex: 1,
                   padding: '12px',
                   backgroundColor:
-                    defaultModelMode === mode ? '#6b4a5a' : 'rgba(107, 74, 90, 0.1)',
-                  color: defaultModelMode === mode ? '#FFFFFF' : '#6b4a5a',
+                    defaultModelMode === mode ? '#bae1ff' : 'rgba(186, 225, 255, 0.2)',
+                  color: defaultModelMode === mode ? '#1565c0' : '#1565c0',
                   border: 'none',
                   borderRadius: '8px',
                   cursor: 'pointer',
@@ -207,7 +207,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ onBack }) => {
             style={{
               fontSize: '16px',
               fontWeight: '600',
-              color: '#6b4a5a',
+              color: '#1565c0',
               marginBottom: '12px',
             }}
           >
