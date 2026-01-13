@@ -33,7 +33,14 @@ export const MyBMWPage: React.FC<MyBMWPageProps> = ({ onBack }) => {
   const { state } = useVehicleAPI();
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [isFadingIn, setIsFadingIn] = useState(true);
-  const [is3D, setIs3D] = useState(false);
+  const [animationsEnabled, setAnimationsEnabled] = useState(() => {
+    const saved = localStorage.getItem('animationsEnabled');
+    return saved !== null ? JSON.parse(saved) : true;
+  });
+  const [is3D, setIs3D] = useState(() => {
+    const saved = localStorage.getItem('defaultModelMode');
+    return saved === '3D';
+  });
 
   useEffect(() => {
     // Preload all car images
@@ -111,7 +118,7 @@ export const MyBMWPage: React.FC<MyBMWPageProps> = ({ onBack }) => {
     setTimeout(() => {
       onBack();
       setIsFadingOut(false);
-    }, 300);
+    }, animationsEnabled ? 300 : 0);
   };
 
   const getCarImage = () => {
@@ -143,7 +150,7 @@ export const MyBMWPage: React.FC<MyBMWPageProps> = ({ onBack }) => {
     >
       <div style={{ 
         opacity: isFadingOut ? 0 : isFadingIn ? 0 : 1,
-        transition: 'opacity 0.3s ease-out',
+        transition: animationsEnabled ? 'opacity 0.3s ease-out' : 'none',
         backgroundColor: '#f2d2dc',
         display: 'flex',
         alignItems: 'center',

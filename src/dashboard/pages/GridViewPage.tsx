@@ -17,11 +17,22 @@ export const GridViewPage: React.FC<GridViewPageProps> = ({ onNavigateToMyBMW, o
   const [mergeStep, setMergeStep] = useState(0);
   const [clickedTileColor, setClickedTileColor] = useState<string | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [animationsEnabled, setAnimationsEnabled] = useState(() => {
+    const saved = localStorage.getItem('animationsEnabled');
+    return saved !== null ? JSON.parse(saved) : true;
+  });
 
   const handleTileClick = (tileColor: string, onNavigate: () => void) => {
     if (mergeStep === 0 && !isAnimating) {
       setIsAnimating(true);
       setClickedTileColor(tileColor);
+      
+      if (!animationsEnabled) {
+        // No animation - just navigate immediately
+        onNavigate();
+        setIsAnimating(false);
+        return;
+      }
       
       // Step 0->1: Images/text fade out (0.5s)
       setTimeout(() => {

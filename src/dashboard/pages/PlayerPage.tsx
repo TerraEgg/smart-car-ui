@@ -48,6 +48,10 @@ export const PlayerPage: React.FC<PlayerPageProps> = ({
 }) => {
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [isFadingIn, setIsFadingIn] = useState(true);
+  const [animationsEnabled, setAnimationsEnabled] = useState(() => {
+    const saved = localStorage.getItem('animationsEnabled');
+    return saved !== null ? JSON.parse(saved) : true;
+  });
 
   useEffect(() => {
     setIsFadingIn(false);
@@ -58,7 +62,7 @@ export const PlayerPage: React.FC<PlayerPageProps> = ({
     setTimeout(() => {
       onBack();
       setIsFadingOut(false);
-    }, 300);
+    }, animationsEnabled ? 300 : 0);
   };
 
   return (
@@ -70,7 +74,7 @@ export const PlayerPage: React.FC<PlayerPageProps> = ({
         display: 'flex',
         flexDirection: 'column',
         opacity: isFadingOut ? 0 : isFadingIn ? 0 : 1,
-        transition: 'opacity 0.3s ease-out',
+        transition: animationsEnabled ? 'opacity 0.3s ease-out' : 'none',
         position: 'relative',
       }}
     >

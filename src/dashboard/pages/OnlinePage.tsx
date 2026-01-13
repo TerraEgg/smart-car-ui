@@ -37,6 +37,10 @@ export const OnlinePage: React.FC<OnlinePageProps> = ({
   const [localTracks, setLocalTracks] = useState<Track[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [isFadingOut, setIsFadingOut] = useState(false);
+  const [animationsEnabled, setAnimationsEnabled] = useState(() => {
+    const saved = localStorage.getItem('animationsEnabled');
+    return saved !== null ? JSON.parse(saved) : true;
+  });
   
   // Use shared audio ref if provided, otherwise create local one
   const localAudioRef = useRef<HTMLAudioElement>(null);
@@ -181,7 +185,7 @@ export const OnlinePage: React.FC<OnlinePageProps> = ({
     setTimeout(() => {
       onBack();
       setIsFadingOut(false);
-    }, 300);
+    }, animationsEnabled ? 300 : 0);
   };
 
   // Sync audio when current track changes (only if using local audio)
@@ -211,7 +215,7 @@ export const OnlinePage: React.FC<OnlinePageProps> = ({
         display: 'flex',
         flexDirection: 'column',
         opacity: isFadingOut ? 0 : 1,
-        transition: 'opacity 0.3s ease-out',
+        transition: animationsEnabled ? 'opacity 0.3s ease-out' : 'none',
         position: 'relative',
       }}
     >

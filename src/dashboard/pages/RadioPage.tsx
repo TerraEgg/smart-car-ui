@@ -27,6 +27,10 @@ export const RadioPage: React.FC<RadioPageProps> = ({ onBack, onSelectStation, i
   const [error, setError] = useState<string | null>(initialError || null);
   const [showError, setShowError] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [animationsEnabled, setAnimationsEnabled] = useState(() => {
+    const saved = localStorage.getItem('animationsEnabled');
+    return saved !== null ? JSON.parse(saved) : true;
+  });
   const errorTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
 
@@ -117,7 +121,7 @@ export const RadioPage: React.FC<RadioPageProps> = ({ onBack, onSelectStation, i
     setTimeout(() => {
       onBack();
       setIsFadingOut(false);
-    }, 300);
+    }, animationsEnabled ? 300 : 0);
   };
 
   const handleSelectStation = (station: RadioStation) => {
@@ -142,7 +146,7 @@ export const RadioPage: React.FC<RadioPageProps> = ({ onBack, onSelectStation, i
         display: 'flex',
         flexDirection: 'column',
         opacity: isFadingOut ? 0 : 1,
-        transition: 'opacity 0.3s ease-out',
+        transition: animationsEnabled ? 'opacity 0.3s ease-out' : 'none',
         position: 'relative',
       }}
     >

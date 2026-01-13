@@ -10,17 +10,33 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ onBack }) => {
   const { state, setWeather } = useVehicleAPI();
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [isFadingIn, setIsFadingIn] = useState(true);
+  const [animationsEnabled, setAnimationsEnabled] = useState(() => {
+    const saved = localStorage.getItem('animationsEnabled');
+    return saved !== null ? JSON.parse(saved) : true;
+  });
+  const [defaultModelMode, setDefaultModelMode] = useState<'2D' | '3D'>(() => {
+    const saved = localStorage.getItem('defaultModelMode');
+    return (saved as '2D' | '3D') || '2D';
+  });
 
   useEffect(() => {
     setIsFadingIn(false);
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem('animationsEnabled', JSON.stringify(animationsEnabled));
+  }, [animationsEnabled]);
+
+  useEffect(() => {
+    localStorage.setItem('defaultModelMode', defaultModelMode);
+  }, [defaultModelMode]);
 
   const handleBack = () => {
     setIsFadingOut(true);
     setTimeout(() => {
       onBack();
       setIsFadingOut(false);
-    }, 300);
+    }, animationsEnabled ? 300 : 0);
   };
 
   const handleWeatherChange = (weather: 'clear' | 'cloudy' | 'rainy' | 'snowy' | 'foggy') => {
@@ -36,7 +52,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ onBack }) => {
         display: 'flex',
         flexDirection: 'column',
         opacity: isFadingOut ? 0 : isFadingIn ? 0 : 1,
-        transition: 'opacity 0.3s ease-out',
+        transition: animationsEnabled ? 'opacity 0.3s ease-out' : 'none',
         position: 'relative',
       }}
     >
@@ -85,22 +101,59 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ onBack }) => {
         </div>
       </div>
 
-      {/* Settings Content - Grid Layout */}
+      {/* Settings Content - Stack Layout */}
       <div
         style={{
           flex: 1,
           padding: '20px',
           overflow: 'auto',
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
+          display: 'flex',
+          flexDirection: 'column',
           gap: '16px',
-          alignContent: 'start',
         }}
       >
-        {/* Weather Tile */}
+        {/* Toggle Animations */}
         <div
           style={{
-            gridColumn: '1 / -1',
+            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+            borderRadius: '12px',
+            padding: '20px',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <div
+            style={{
+              fontSize: '16px',
+              fontWeight: '600',
+              color: '#6b4a5a',
+            }}
+          >
+            Animations
+          </div>
+          <button
+            onClick={() => setAnimationsEnabled(!animationsEnabled)}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: animationsEnabled ? '#6b4a5a' : 'rgba(107, 74, 90, 0.2)',
+              color: animationsEnabled ? '#FFFFFF' : '#6b4a5a',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontSize: '14px',
+              fontWeight: '500',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            {animationsEnabled ? 'On' : 'Off'}
+          </button>
+        </div>
+
+        {/* Default Model Load Mode */}
+        <div
+          style={{
             backgroundColor: 'rgba(255, 255, 255, 0.9)',
             borderRadius: '12px',
             padding: '20px',
@@ -115,40 +168,39 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ onBack }) => {
               marginBottom: '12px',
             }}
           >
-            Weather
+            Default Model Type for myBMW
           </div>
           <div
             style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
+              display: 'flex',
               gap: '8px',
             }}
           >
-            {(['clear', 'cloudy', 'rainy', 'snowy', 'foggy'] as const).map((weather) => (
+            {(['2D', '3D'] as const).map((mode) => (
               <button
-                key={weather}
-                onClick={() => handleWeatherChange(weather)}
+                key={mode}
+                onClick={() => setDefaultModelMode(mode)}
                 style={{
+                  flex: 1,
                   padding: '12px',
                   backgroundColor:
-                    state.weather === weather ? '#6b4a5a' : 'rgba(107, 74, 90, 0.1)',
-                  color: state.weather === weather ? '#FFFFFF' : '#6b4a5a',
+                    defaultModelMode === mode ? '#6b4a5a' : 'rgba(107, 74, 90, 0.1)',
+                  color: defaultModelMode === mode ? '#FFFFFF' : '#6b4a5a',
                   border: 'none',
                   borderRadius: '8px',
                   cursor: 'pointer',
                   fontSize: '14px',
                   fontWeight: '500',
                   transition: 'all 0.2s ease',
-                  textTransform: 'capitalize',
                 }}
               >
-                {weather}
+                {mode}
               </button>
             ))}
           </div>
         </div>
 
-        {/* About Section */}
+        {/* Version Section */}
         <div
           style={{
             backgroundColor: 'rgba(255, 255, 255, 0.9)',
@@ -165,17 +217,15 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ onBack }) => {
               marginBottom: '12px',
             }}
           >
-            About
+            Version
           </div>
           <div
             style={{
-              fontSize: '13px',
+              fontSize: '14px',
               color: '#666',
-              lineHeight: '1.6',
             }}
           >
-            <p>Smart Car UI v1.0</p>
-            <p>A modern BMW-inspired dashboard for vehicle control and media management.</p>
+            Smart Car UI v3.2
           </div>
         </div>
       </div>

@@ -18,6 +18,10 @@ export const GPSPage: React.FC<GPSPageProps> = ({ onBack }) => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchResults, setSearchResults] = useState<LocationResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [animationsEnabled, setAnimationsEnabled] = useState(() => {
+    const saved = localStorage.getItem('animationsEnabled');
+    return saved !== null ? JSON.parse(saved) : true;
+  });
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -62,7 +66,7 @@ export const GPSPage: React.FC<GPSPageProps> = ({ onBack }) => {
     setTimeout(() => {
       onBack();
       setIsFadingOut(false);
-    }, 300);
+    }, animationsEnabled ? 300 : 0);
   };
 
   const handleSearch = async (query: string) => {
@@ -140,7 +144,7 @@ export const GPSPage: React.FC<GPSPageProps> = ({ onBack }) => {
         display: 'flex',
         flexDirection: 'column',
         opacity: isFadingOut ? 0 : isFadingIn ? 0 : 1,
-        transition: 'opacity 0.3s ease-out',
+        transition: animationsEnabled ? 'opacity 0.3s ease-out' : 'none',
         position: 'relative',
       }}
     >

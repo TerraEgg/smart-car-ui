@@ -81,6 +81,9 @@ function App() {
       '/lcar.png',
       '/dcar.png',
       '/hc.png',
+      '/reversecam.png',
+      '/topdown.png',
+      '/bitumen.png',
       '/vite.svg',
       '/2025_bmw_m4_competition.glb'
     ];

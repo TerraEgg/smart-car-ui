@@ -12,6 +12,10 @@ export const HeatPage: React.FC<HeatPageProps> = ({ onBack }) => {
   const { showNotification } = useNotifications();
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [isFadingIn, setIsFadingIn] = useState(true);
+  const [animationsEnabled, setAnimationsEnabled] = useState(() => {
+    const saved = localStorage.getItem('animationsEnabled');
+    return saved !== null ? JSON.parse(saved) : true;
+  });
 
   useEffect(() => {
     setIsFadingIn(false);
@@ -22,7 +26,7 @@ export const HeatPage: React.FC<HeatPageProps> = ({ onBack }) => {
     setTimeout(() => {
       onBack();
       setIsFadingOut(false);
-    }, 300);
+    }, animationsEnabled ? 300 : 0);
   };
 
   const handleSeatHeatClick = (seat: 'driver' | 'passenger', level: number) => {
@@ -57,7 +61,7 @@ export const HeatPage: React.FC<HeatPageProps> = ({ onBack }) => {
         display: 'flex',
         flexDirection: 'column',
         opacity: isFadingOut ? 0 : isFadingIn ? 0 : 1,
-        transition: 'opacity 0.3s ease-out',
+        transition: animationsEnabled ? 'opacity 0.3s ease-out' : 'none',
         position: 'relative',
         borderRadius: '0 0 20px 0px',
       }}

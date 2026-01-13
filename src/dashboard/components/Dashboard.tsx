@@ -9,6 +9,7 @@ import { OnlinePage } from '../pages/OnlinePage';
 import { SettingsPage } from '../pages/SettingsPage';
 import { GPSPage } from '../pages/GPSPage';
 import { HeatPage } from '../pages/HeatPage';
+import { ReverseCamPage } from '../pages/ReverseCamPage';
 import { NotificationDisplay } from '../../components/NotificationDisplay';
 import './Dashboard.css';
 
@@ -280,6 +281,11 @@ export const Dashboard: React.FC = () => {
       )}
       {currentPage === 'heat' && (
         <HeatPage onBack={() => setCurrentPage('grid')} />
+      )}
+      {state.gear === 'R' && (
+        <ReverseCamPage onClose={() => {
+          // Stay visible in reverse, will close automatically when gear changes
+        }} />
       )}
       <NotificationDisplay />
     </div>
