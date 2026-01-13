@@ -1,5 +1,5 @@
 import React from 'react';
-import { Zap, Power, Gauge, Lightbulb, Wind, Lock, Thermometer, Lock as LockIcon } from 'lucide-react';
+import { Gauge, Lightbulb, Wind, Thermometer, Lock as LockIcon } from 'lucide-react';
 import { useVehicleAPI } from '../../api/VehicleContext';
 import { useNotifications } from '../../api/NotificationContext';
 import './VehicleControls.css';
@@ -86,7 +86,7 @@ export const VehicleControls: React.FC = () => {
     showNotification({
       type: 'success',
       title: 'Security',
-      message: state.isLocked ? 'Vehicle Unlocked' : 'Vehicle Locked',
+      message: 'Vehicle Locked/Unlocked',
       icon: <LockIcon size={20} />,
     });
   };
@@ -112,7 +112,7 @@ export const VehicleControls: React.FC = () => {
   };
 
   const handleSetSeatHeat = (seat: 'driver' | 'passenger', level: number) => {
-    setSeatHeat(seat, level);
+    setSeatHeat(seat, level as 0 | 1 | 2 | 3);
     showNotification({
       type: 'info',
       title: 'Seat Heat',
@@ -243,7 +243,7 @@ export const VehicleControls: React.FC = () => {
               {[0, 1, 2, 3].map((level) => (
                 <button
                   key={level}
-                  onClick={() => handleSetSeatHeat('rearLeft', level as 0 | 1 | 2 | 3)}
+                  onClick={() => handleSetSeatHeat('driver', level as 0 | 1 | 2 | 3)}
                   className={`control-btn heat ${state.seatHeat.rearLeft === level ? 'active' : ''}`}
                 >
                   {level === 0 ? 'Off' : level}
@@ -257,7 +257,7 @@ export const VehicleControls: React.FC = () => {
               {[0, 1, 2, 3].map((level) => (
                 <button
                   key={level}
-                  onClick={() => handleSetSeatHeat('rearRight', level as 0 | 1 | 2 | 3)}
+                  onClick={() => handleSetSeatHeat('passenger', level as 0 | 1 | 2 | 3)}
                   className={`control-btn heat ${state.seatHeat.rearRight === level ? 'active' : ''}`}
                 >
                   {level === 0 ? 'Off' : level}
