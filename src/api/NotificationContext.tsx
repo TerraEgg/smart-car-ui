@@ -28,7 +28,14 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({ childr
       duration: notification.duration || 3000,
     };
 
-    setNotifications((prev) => [...prev, fullNotification]);
+    setNotifications((prev) => {
+      let updated = [...prev, fullNotification];
+      // Keep only the last 2 notifications
+      if (updated.length > 2) {
+        updated = updated.slice(-2);
+      }
+      return updated;
+    });
 
     if (fullNotification.duration) {
       setTimeout(() => {
