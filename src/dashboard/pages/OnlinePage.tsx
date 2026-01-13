@@ -37,7 +37,7 @@ export const OnlinePage: React.FC<OnlinePageProps> = ({
   const [localTracks, setLocalTracks] = useState<Track[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [isFadingOut, setIsFadingOut] = useState(false);
-  const [animationsEnabled, setAnimationsEnabled] = useState(() => {
+  const [animationsEnabled] = useState(() => {
     const saved = localStorage.getItem('animationsEnabled');
     return saved !== null ? JSON.parse(saved) : true;
   });

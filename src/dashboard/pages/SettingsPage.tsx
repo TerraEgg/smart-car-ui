@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
-import { useVehicleAPI } from '../../api/VehicleContext';
 
 interface SettingsPageProps {
   onBack: () => void;
 }
 
 export const SettingsPage: React.FC<SettingsPageProps> = ({ onBack }) => {
-  const { state, setWeather } = useVehicleAPI();
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [isFadingIn, setIsFadingIn] = useState(true);
   const [animationsEnabled, setAnimationsEnabled] = useState(() => {
@@ -37,10 +35,6 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ onBack }) => {
       onBack();
       setIsFadingOut(false);
     }, animationsEnabled ? 300 : 0);
-  };
-
-  const handleWeatherChange = (weather: 'clear' | 'cloudy' | 'rainy' | 'snowy' | 'foggy') => {
-    setWeather(weather);
   };
 
   return (

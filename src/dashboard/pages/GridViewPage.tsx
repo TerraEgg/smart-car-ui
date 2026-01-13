@@ -17,7 +17,7 @@ export const GridViewPage: React.FC<GridViewPageProps> = ({ onNavigateToMyBMW, o
   const [mergeStep, setMergeStep] = useState(0);
   const [clickedTileColor, setClickedTileColor] = useState<string | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [animationsEnabled, setAnimationsEnabled] = useState(() => {
+  const [animationsEnabled] = useState(() => {
     const saved = localStorage.getItem('animationsEnabled');
     return saved !== null ? JSON.parse(saved) : true;
   });

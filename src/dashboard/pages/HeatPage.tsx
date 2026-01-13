@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Thermometer } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { useVehicleAPI } from '../../api/VehicleContext';
-import { useNotifications } from '../../api/NotificationContext';
 
 interface HeatPageProps {
   onBack: () => void;
@@ -9,10 +8,9 @@ interface HeatPageProps {
 
 export const HeatPage: React.FC<HeatPageProps> = ({ onBack }) => {
   const { state, setInsideTemp, setSeatHeat } = useVehicleAPI();
-  const { showNotification } = useNotifications();
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [isFadingIn, setIsFadingIn] = useState(true);
-  const [animationsEnabled, setAnimationsEnabled] = useState(() => {
+  const [animationsEnabled] = useState(() => {
     const saved = localStorage.getItem('animationsEnabled');
     return saved !== null ? JSON.parse(saved) : true;
   });

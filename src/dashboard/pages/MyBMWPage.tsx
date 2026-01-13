@@ -33,7 +33,7 @@ export const MyBMWPage: React.FC<MyBMWPageProps> = ({ onBack }) => {
   const { state } = useVehicleAPI();
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [isFadingIn, setIsFadingIn] = useState(true);
-  const [animationsEnabled, setAnimationsEnabled] = useState(() => {
+  const [animationsEnabled] = useState(() => {
     const saved = localStorage.getItem('animationsEnabled');
     return saved !== null ? JSON.parse(saved) : true;
   });

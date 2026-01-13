@@ -27,7 +27,7 @@ export const RadioPage: React.FC<RadioPageProps> = ({ onBack, onSelectStation, i
   const [error, setError] = useState<string | null>(initialError || null);
   const [showError, setShowError] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
-  const [animationsEnabled, setAnimationsEnabled] = useState(() => {
+  const [animationsEnabled] = useState(() => {
     const saved = localStorage.getItem('animationsEnabled');
     return saved !== null ? JSON.parse(saved) : true;
   });

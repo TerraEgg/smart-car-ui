@@ -1,5 +1,5 @@
 import React from 'react';
-import { Gauge, Lightbulb, Wind, Thermometer, Lock as LockIcon } from 'lucide-react';
+import { Gauge } from 'lucide-react';
 import { useVehicleAPI } from '../../api/VehicleContext';
 import { useNotifications } from '../../api/NotificationContext';
 import './VehicleControls.css';

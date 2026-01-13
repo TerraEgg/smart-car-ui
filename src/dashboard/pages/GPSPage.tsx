@@ -18,7 +18,7 @@ export const GPSPage: React.FC<GPSPageProps> = ({ onBack }) => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchResults, setSearchResults] = useState<LocationResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [animationsEnabled, setAnimationsEnabled] = useState(() => {
+  const [animationsEnabled] = useState(() => {
     const saved = localStorage.getItem('animationsEnabled');
     return saved !== null ? JSON.parse(saved) : true;
   });
