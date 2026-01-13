@@ -27,14 +27,6 @@ export const HeatPage: React.FC<HeatPageProps> = ({ onBack }) => {
 
   const handleSeatHeatClick = (seat: 'driver' | 'passenger', level: number) => {
     setSeatHeat(seat, level as 0 | 1 | 2 | 3);
-    
-    const levelText = level === 0 ? 'Off' : `Level ${level}`;
-    showNotification({
-      type: 'info',
-      title: `${seat === 'driver' ? 'Driver' : 'Passenger'} Seat`,
-      message: `Heat ${levelText}`,
-      icon: <Thermometer size={20} />,
-    });
   };
 
   const getHeatColor = (level: number): string => {
@@ -349,10 +341,10 @@ export const HeatPage: React.FC<HeatPageProps> = ({ onBack }) => {
             onClick={() => handleSeatHeatClick('passenger', (getSeatHeatLevel('passenger') + 1) % 4)}
             style={{
               position: 'absolute',
-              left: '34.7%',
+              left: '20.7%',
               top: '12.7%',
               width: '25.4%',
-              height: '66.7%',
+              height: '20.7%',
               cursor: 'pointer',
               zIndex: 10,
             }}
@@ -366,7 +358,7 @@ export const HeatPage: React.FC<HeatPageProps> = ({ onBack }) => {
               left: '57.3%',
               top: '12.4%',
               width: '26.7%',
-              height: '64.6%',
+              height: '20.7%',
               cursor: 'pointer',
               zIndex: 10,
             }}

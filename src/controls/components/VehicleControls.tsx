@@ -35,17 +35,7 @@ export const VehicleControls: React.FC = () => {
   const handleToggleLights = () => {
     const nextLights = getNextLights();
     toggleLights(nextLights);
-    const messages: Record<string, string> = {
-      off: 'Lights Off',
-      low: 'Low Beam',
-      high: 'High Beam',
-    };
-    showNotification({
-      type: 'info',
-      title: 'Lights',
-      message: messages[nextLights],
-      icon: <Lightbulb size={20} />,
-    });
+
   };
 
   const handleChangeGear = (gear: string) => {
@@ -67,58 +57,22 @@ export const VehicleControls: React.FC = () => {
   const handleToggleWipers = () => {
     const nextWipers = getNextWipers();
     toggleWipers(nextWipers);
-    const messages: Record<string, string> = {
-      off: 'Wipers Off',
-      slow: 'Slow',
-      medium: 'Medium',
-      fast: 'Fast',
-    };
-    showNotification({
-      type: 'info',
-      title: 'Wipers',
-      message: messages[nextWipers],
-      icon: <Wind size={20} />,
-    });
   };
 
   const handleToggleDoorLock = () => {
     toggleDoorLock();
-    showNotification({
-      type: 'success',
-      title: 'Security',
-      message: 'Vehicle Locked/Unlocked',
-      icon: <LockIcon size={20} />,
-    });
   };
 
   const handleToggleDoor = (door: 'frontLeft' | 'frontRight') => {
     toggleDoor(door);
-    showNotification({
-      type: 'info',
-      title: 'Door',
-      message: state.doors[door] ? `${door === 'frontLeft' ? 'Left' : 'Right'} Door Open` : `${door === 'frontLeft' ? 'Left' : 'Right'} Door Closed`,
-      icon: <LockIcon size={20} />,
-    });
   };
 
   const handleToggleWindow = (window: 'frontLeft' | 'frontRight') => {
     toggleWindow(window);
-    showNotification({
-      type: 'info',
-      title: 'Window',
-      message: state.windows[window] ? `${window === 'frontLeft' ? 'Left' : 'Right'} Window Down` : `${window === 'frontLeft' ? 'Left' : 'Right'} Window Up`,
-      icon: <Wind size={20} />,
-    });
   };
 
   const handleSetSeatHeat = (seat: 'driver' | 'passenger', level: number) => {
     setSeatHeat(seat, level as 0 | 1 | 2 | 3);
-    showNotification({
-      type: 'info',
-      title: 'Seat Heat',
-      message: level > 0 ? `${seat === 'driver' ? 'Driver' : 'Passenger'} Seat Heat: ${level}` : `${seat === 'driver' ? 'Driver' : 'Passenger'} Seat Heat Off`,
-      icon: <Thermometer size={20} />,
-    });
   };
   const getNextLights = () => {
     const lights: Array<'off' | 'low' | 'high'> = ['off', 'low', 'high'];
