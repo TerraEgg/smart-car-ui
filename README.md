@@ -45,5 +45,8 @@ To generate a production-ready build:
 pnpm build
 ```
 
+## Artificial Intelligence Notice
+AI was used for locating & fixing bugs along side organizing certain parts of the code.
+
 ## Compatibility Note
 This web app will not work on mobile devices or small screens. As it was built around a 1920x1080 display.
