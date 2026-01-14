@@ -28,9 +28,9 @@ Ensure that a compatible version of Node.js is installed on the host machine.
 ### Setup
 1. Clone the repository
 2. Install the required dependencies using pnpm:
-   ```bash
-   pnpm install
-   ```
+```bash
+pnpm install
+```
 
 ### Development Server
 To launch the application in a local development environment:
