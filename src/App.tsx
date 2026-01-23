@@ -6,9 +6,12 @@ import { VehicleContext } from "./api/VehicleContext";
 import { NotificationProvider } from "./api/NotificationContext";
 import { Dashboard } from "./dashboard/components/Dashboard";
 import { VehicleControls } from "./controls/components/VehicleControls";
+import { ScaleWrapper } from "./components/ScaleWrapper";
+
 function App() {
   const vehicleAPI = useVehicleState();
   const [isMobile, setIsMobile] = useState(false);
+
   useEffect(() => {
     const checkMobile = () => {
       const userAgent =
@@ -20,10 +23,12 @@ function App() {
       const isSmallScreen = window.innerWidth < 1024;
       setIsMobile(isMobileDevice || isSmallScreen);
     };
+
     checkMobile();
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
+
   if (isMobile) {
     return (
       <div
@@ -72,6 +77,7 @@ function App() {
       </div>
     );
   }
+
   useEffect(() => {
     const images = [
       "/0do.png",
@@ -93,19 +99,25 @@ function App() {
       img.src = src;
     });
   }, []);
+
   return (
     <VehicleContext.Provider value={vehicleAPI}>
       <NotificationProvider>
         <div className="app-container">
           <div className="carplay-section">
-            <Dashboard />
+            <ScaleWrapper designWidth={1024} designHeight={600}>
+              <Dashboard />
+            </ScaleWrapper>
           </div>
           <div className="controls-section">
-            <VehicleControls />
+            <ScaleWrapper designWidth={320} designHeight={600}>
+              <VehicleControls />
+            </ScaleWrapper>
           </div>
         </div>
       </NotificationProvider>
     </VehicleContext.Provider>
   );
 }
+
 export default App;
